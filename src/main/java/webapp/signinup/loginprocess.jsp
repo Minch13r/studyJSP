@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="webapp.signinup.MemberDTO"%>
-<%@ page import="java.util.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="webapp.signinup.MemberDTO" %>
+<%@ page import="java.util.*" %>
 <!-- loginprocess.jsp -->
 <%
     request.setCharacterEncoding("UTF-8");
@@ -9,26 +9,34 @@
     String password = request.getParameter("mpw");
 
     // 입력값 검증
-    if(id == null || id.trim().isEmpty() ||
+    if (id == null || id.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {
         request.setAttribute("errorMsg", "아이디와 비밀번호를 모두 입력해주세요.");
         request.getRequestDispatcher("index.jsp").forward(request, response);
         return;
     }
 
-    // 목록 가져오기
-    List<String> datas = (List<String>)application.getAttribute("datas");
-    boolean flag = false;
+    // 회원 목록 가져오기
+    List<MemberDTO> datas = (List<MemberDTO>) application.getAttribute("datas");
+    MemberDTO loginMember = null;
 
-    // 등록된 아이디 목록이 존재하고, 해당 아이디가 목록에 있는 경우
-    if(datas != null && datas.contains(id)) {
-        flag = true;
+    // 회원 찾기
+    if (datas != null) {
+        for (MemberDTO member : datas) {
+            if (member.getId().equals(id) && member.getPassword().equals(password)) {
+                loginMember = member;
+                break;
+            }
+        }
     }
 
     // 로그인 처리
-    if(flag) {
+    if (loginMember != null) {
         // 로그인 성공
-        session.setAttribute("mid", id);
+        session.setAttribute("mid", loginMember.getId());
+        session.setAttribute("email", loginMember.getEmail());
+        session.setAttribute("phoneNumber", loginMember.getPhoneNumber());
+
         out.println("<script>");
         out.println("alert('로그인성공');");
         out.println("window.location.href='information.jsp';");

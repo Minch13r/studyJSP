@@ -6,8 +6,8 @@
 <%
     request.setCharacterEncoding("UTF-8");
 
-    // 세션에 등록된 회원 목록을 가져옴 (없으면 새로 생성)
-    List<String> datas = (List<String>)application.getAttribute("datas");
+    // 회원 정보 전체를 저장하는 리스트
+    List<MemberDTO> datas = (List<MemberDTO>)application.getAttribute("datas");
     if(datas == null) {
         datas = new ArrayList<>();
         application.setAttribute("datas", datas);
@@ -21,8 +21,8 @@
 
         // 필수 입력값 체크
         if(id == null || password == null || email == null || phoneNumber == null ||
-                id.isEmpty() || password.isEmpty() ||
-                email.isEmpty() || phoneNumber.isEmpty()) {
+                id.trim().isEmpty() || password.trim().isEmpty() ||
+                email.trim().isEmpty() || phoneNumber.trim().isEmpty()) {
             out.println("<script>");
             out.println("alert('모든 필드를 입력해주세요.');");
             out.println("history.back();");
@@ -31,7 +31,15 @@
         }
 
         // 아이디 중복 체크
-        if(datas.contains(id)) {
+        boolean flag = false;
+        for(MemberDTO m : datas) {
+            if(m.getId().equals(id)) {
+                flag = true;
+                break;
+            }
+        }
+
+        if(flag) {
             out.println("<script>");
             out.println("alert('이미 사용중인 아이디입니다.');");
             out.println("history.back();");
@@ -39,21 +47,26 @@
             return;
         }
 
-        // 새로운 회원 정보 생성
+        // 새로운 회원 정보 추가
         MemberDTO member = new MemberDTO();
         member.setId(id);
         member.setPassword(password);
         member.setEmail(email);
         member.setPhoneNumber(phoneNumber);
+        datas.add(member);
 
-        // 아이디 목록에 추가
-        datas.add(id);
+        // 로그
+        System.out.println("[로그]새로운 회원 등록 완료:");
+        System.out.println("[로그]ID: " + id);
 
+        // client용 로그
         out.println("<script>");
-        out.println("alert('회원가입성공');");
+        out.println("alert('회원가입이 성공적으로 완료되었습니다.');");
         out.println("window.location.href='index.jsp';");
         out.println("</script>");
-    } catch(Exception e) {
+    }
+    catch(Exception e) {
+        System.out.println("회원가입 처리 중 오류 발생: " + e.getMessage());
         request.setAttribute("errorMsg", e.getMessage());
         request.getRequestDispatcher("signup.jsp").forward(request, response);
     }
