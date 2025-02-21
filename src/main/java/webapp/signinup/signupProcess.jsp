@@ -57,8 +57,9 @@
         datas.add(member);
 
         // 로그
-        System.out.println("[로그]새로운 회원 등록 완료:");
+        System.out.println("[로그]새로운 회원 등록 완료");
         System.out.println("[로그]ID: " + id);
+        System.out.println("[로그]회원수:" + datas.size());
 
         // client용 로그
         out.println("<script>");
