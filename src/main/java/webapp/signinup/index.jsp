@@ -44,6 +44,7 @@
             </tr>
             <tr>
                 <td colspan="2" align="right">
+
                     <button type="button" class="btn btn-primary btn-custom" onclick="submitsign('login')">로그인</button>
                     <button type="button" class="btn btn-secondary btn-custom" onclick="submitsign('signup')">회원가입</button>
                 </td>
