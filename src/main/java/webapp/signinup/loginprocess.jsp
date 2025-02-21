@@ -16,7 +16,7 @@
         return;
     }
 
-    // application 스코프에서 등록된 아이디 목록 가져오기
+    // 목록 가져오기
     List<String> datas = (List<String>)application.getAttribute("datas");
     boolean flag = false;
 
