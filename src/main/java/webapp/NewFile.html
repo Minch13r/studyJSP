@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>계산기</h1>
+<hr>
+<!-- input은 form 태그 내에서 사용해야 함 -->
+<!-- 모든 input은 name이 필수다. -->
+<!-- form action="/패키지명/클래스명"-->
+<form action="/calc" method="POST">
+    <input type="text" name="num1"> <br>
+    <!-- 선택지를 제한할 때는 select를 쓴다. -->
+    <select name="op">
+        <option>+</option>
+        <option>-</option>
+        <option>X</option>
+        <option>/</option>
+    </select>
+    <input type="text" name="num2"> <br>
+    <input type="submit" value="계산하기">
+</form>
+
+</body>
+</html>
