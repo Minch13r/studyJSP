@@ -1,0 +1,28 @@
+body {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+h1 {
+    font-family: 'Arial', sans-serif;
+    align-content: center;
+    padding: 20px;
+}
+
+table {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+td {
+    padding: 10px;
+}
+
+.btn-custom {
+    margin: 5px;
+    padding: 5px 15px;
+}
