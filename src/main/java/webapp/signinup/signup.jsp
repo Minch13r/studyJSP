@@ -27,22 +27,33 @@
                            placeholder="비밀번호를 입력하세요">
                 </td>
             </tr>
+            <!-- HTML 수정 부분 -->
             <tr>
                 <td>이메일</td>
                 <td>
-                    <input type="email" name="email" class="form-control" required
-                           placeholder="이메일을 입력하세요">
+                    <div class="d-flex align-items-center">
+                        <input type="text" name="emailId" class="form-control me-2" required
+                               placeholder="이메일을 입력하세요" style="width: 60%;" pattern="[a-zA-Z0-9_-]+">
+                        <span class="mx-2">@</span>
+                        <select name="emailDomain" class="form-control" style="width: 35%;">
+                            <option value="naver.com">naver.com</option>
+                            <option value="daum.net">daum.net</option>
+                            <option value="gmail.com">gmail.com</option>
+                        </select>
+                    </div>
+                    <div class="invalid-feedback" id="emailError"></div>
                 </td>
             </tr>
             <tr>
                 <td>전화번호</td>
                 <td>
                     <input type="tel" name="phoneNumber" class="form-control" required
-                           placeholder="전화번호를 입력하세요">
+                           placeholder="010-1234-5678" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+                    <div class="invalid-feedback" id="phoneError"></div>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2" class="text-end">
+
+            <td colspan="2" class="text-end">
                     <button type="button" class="btn btn-secondary" onclick="location.href='index.jsp'">
                         취소
                     </button>

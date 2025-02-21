@@ -8,32 +8,8 @@
     <meta charset="UTF-8">
     <title>information.jsp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container1 {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-        }
-        .table {
-            width: 100%;
-            margin-top: 20px;
-        }
-        .table td {
-            padding: 15px;
-            border: 1px solid #dee2e6;
-        }
-        .innertable {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            width: 35%;
-        }
-        .msg {
-            color: cornflowerblue;
-            margin-bottom: 30px;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="css/InformationStyle.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -68,7 +44,7 @@
 
         <div class="text-center mt-4">
             <button class="btn btn-danger" onclick="location.href='index.jsp'">
-                로그아웃
+                메인화면
             </button>
         </div>
         <%
