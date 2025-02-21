@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="webapp.signinup.MemberDTO"%>
 <%@ page import="java.util.*"%>
+
+<!-- signupProcess.jsp -->
 <%
     request.setCharacterEncoding("UTF-8");
 
     // 세션에 등록된 회원 목록을 가져옴 (없으면 새로 생성)
-    List<String> registeredIds = (List<String>)application.getAttribute("registeredIds");
-    if(registeredIds == null) {
-        registeredIds = new ArrayList<>();
-        application.setAttribute("registeredIds", registeredIds);
+    List<String> datas = (List<String>)application.getAttribute("datas");
+    if(datas == null) {
+        datas = new ArrayList<>();
+        application.setAttribute("datas", datas);
     }
 
     try {
@@ -29,7 +31,7 @@
         }
 
         // 아이디 중복 체크
-        if(registeredIds.contains(id)) {
+        if(datas.contains(id)) {
             out.println("<script>");
             out.println("alert('이미 사용중인 아이디입니다.');");
             out.println("history.back();");
@@ -45,7 +47,7 @@
         member.setPhoneNumber(phoneNumber);
 
         // 아이디 목록에 추가
-        registeredIds.add(id);
+        datas.add(id);
 
         out.println("<script>");
         out.println("alert('회원가입성공');");

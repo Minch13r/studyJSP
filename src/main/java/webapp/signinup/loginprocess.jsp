@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="webapp.signinup.MemberDTO"%>
 <%@ page import="java.util.*"%>
-
+<!-- loginprocess.jsp -->
 <%
     request.setCharacterEncoding("UTF-8");
 
@@ -17,11 +17,11 @@
     }
 
     // application 스코프에서 등록된 아이디 목록 가져오기
-    List<String> registeredIds = (List<String>)application.getAttribute("registeredIds");
+    List<String> datas = (List<String>)application.getAttribute("datas");
     boolean flag = false;
 
     // 등록된 아이디 목록이 존재하고, 해당 아이디가 목록에 있는 경우
-    if(registeredIds != null && registeredIds.contains(id)) {
+    if(datas != null && datas.contains(id)) {
         flag = true;
     }
 
