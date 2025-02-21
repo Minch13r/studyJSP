@@ -7,9 +7,10 @@
     request.setCharacterEncoding("UTF-8");
 
     // 회원 정보 전체를 저장하는 리스트
-    ArrayList<MemberDTO> datas = new ArrayList<MemberDTO>();
-    datas = (ArrayList<MemberDTO>)application.getAttribute("datas");
+    ArrayList<MemberDTO> datas = (ArrayList<MemberDTO>)application.getAttribute("datas");
+
     if(datas == null) {
+        datas = new ArrayList<>();
         application.setAttribute("datas", datas);
     }
 
