@@ -17,7 +17,7 @@
     }
 
     // 회원 목록 가져오기
-    List<MemberDTO> datas = (List<MemberDTO>) application.getAttribute("datas");
+    ArrayList<MemberDTO> datas = (ArrayList<MemberDTO>) application.getAttribute("datas");
     MemberDTO loginMember = null;
 
     // 회원 찾기
