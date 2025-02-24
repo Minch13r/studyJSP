@@ -14,7 +14,8 @@
     if(action.equals("LOGIN")){
         memberDTO = memberDAO.selectOne(memberDTO);
         if(memberDTO != null){
-            session.setAttribute("userName", "작은티모");
+            // user와 memberdto만 넣으면 pw도 같이 들어가서 보안상 좋지 않음.
+            session.setAttribute("userName", memberDTO.getName());
             response.sendRedirect("main.jsp");
         }
         else{

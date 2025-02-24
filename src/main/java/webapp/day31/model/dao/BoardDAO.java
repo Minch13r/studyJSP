@@ -8,7 +8,7 @@ public class BoardDAO {
     final String SELECTALL = "SELECT * FROM BOARD";
     final String SELECTALL_SEARCH_TITLE = "SELECT * FROM BOARD WHERE TITLE LIKE CONCAT('%',?,'%')";
     final String SELECTALL_SEARCH_WRITER = "SELECT * FROM BOARD WHERE WRITER LIKE CONCAT('%',?,'%')";
-    final String SELECTONE = "";
+    final String SELECTONE = "SELECT * FROM MEMBER WHERE BNUM = ?";
     final String INSERT = "INSERT INTO BOARD (BNUM, TITLE, WRITER) VALUES (?, ?, ?)";
     final String UPDATE_CONTENT = "UPDATE BOARD SET WRITER = ? WHERE BNUM = ?";
     final String UPDATE_CNT = "UPDATE BOARD SET CNT = CNT + 1 WHERE BNUM = ?";
