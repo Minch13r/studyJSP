@@ -22,7 +22,7 @@
                 <td><input type="password" name="password" required></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="submit" value="로그인">&nbsp;<a href="controller.jsp">회원가입</a></td>
+                <td colspan="2" align="right"><input type="submit" value="로그인">&nbsp;<a href="controller.jsp?action=JOINPAGE">회원가입</a></td>
             </tr>
         </table>
     </form>
@@ -34,7 +34,7 @@
             <td><%=session.getAttribute("userName")%>님, 환영합니다! :D</td>
         </tr>
         <tr>
-            <td><a href="mypage.jsp">마이페이지버튼</a></td>
+            <td><a href="controller.jsp?action=MYPAGE">마이페이지</a></td>
         </tr>
         <tr>
             <td><a href="controller.jsp?action=LOGOUT">로그아웃</a></td>

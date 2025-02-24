@@ -7,6 +7,14 @@ public class MemberDTO {
     private String password;
     private String name;
     private Date regdate;
+    private String condition;
+
+    public String getCondition() {
+        return condition;
+    }
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
 
     public String getMid() {
         return mid;
