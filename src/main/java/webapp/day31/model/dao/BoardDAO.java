@@ -1,7 +1,11 @@
 package webapp.day31.model.dao;
 
+import webapp.day31.model.common.JDBCUtil;
 import webapp.day31.model.dto.BoardDTO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class BoardDAO {
@@ -17,8 +21,30 @@ public class BoardDAO {
     // 글목록보기
     // 글검색하기
     public ArrayList<BoardDTO> selectAll(BoardDTO boardDTO){
+        ArrayList<BoardDTO> datas = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = JDBCUtil.connect();
+            if(boardDTO.getCondition().equals("SELECTALL")){
+                pstmt = conn.prepareStatement(SELECTALL);
+                ResultSet rs = pstmt.executeQuery();
 
-        return null;
+                while(rs.next()) {
+                    BoardDTO board = new BoardDTO();
+                    board.setBnum(rs.getInt("BNUM"));
+                    board.setTitle(rs.getString("TITLE"));
+                    board.setWriter(rs.getString("WRITER"));
+                    datas.add(board);
+                }
+                rs.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JDBCUtil.disconnect(conn, pstmt);
+        }
+        return datas;
     }
     public BoardDTO selectOne(BoardDTO boardDTO){
         // 글선택하기
