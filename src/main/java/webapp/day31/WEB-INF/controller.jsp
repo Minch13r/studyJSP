@@ -12,6 +12,13 @@
 
     String action = request.getParameter("action");
     System.out.println(" CTRL 로그 : action ["+action+"]");
+
+    // action이 null일 경우 기본 페이지로 이동
+    if(action == null) {
+        response.sendRedirect("main.jsp");
+        return;
+    }
+
     if(action.equals("LOGIN")){
         memberDTO.setCondition("LOGIN");
         memberDTO = memberDAO.selectOne(memberDTO);

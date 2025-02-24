@@ -35,7 +35,7 @@
         <%=session.getAttribute("userName")%>님, 환영합니다! :D
     </div>
     <div class="nav-buttons">
-        <a href="controller.jsp" class="btn btn-primary">마이페이지</a>
+        <a href="controller.jsp?action=MYPAGE" class="btn btn-primary">마이페이지</a>
         <a href="controller.jsp?action=LOGOUT" class="btn btn-danger">로그아웃</a>
         <a href="controller.jsp" class="btn btn-success">글작성</a>
     </div>
