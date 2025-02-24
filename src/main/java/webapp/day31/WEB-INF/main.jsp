@@ -11,6 +11,8 @@
 <div id="login">
     <!-- URL에 나오면 안돼서 Read여도 POST -->
     <form actiion="controller.jsp" method="post">
+        <!-- 사용자가 볼 수 없게 hidden 처리 -->
+        <input type="hidden" name="action" value="LOGIN">
         <table border="1">
             <tr>
                 <td>아이디</td>
