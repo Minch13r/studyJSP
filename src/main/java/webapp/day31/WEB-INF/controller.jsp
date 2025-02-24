@@ -28,4 +28,10 @@
         // session.invalidate();
         out.println("<script>alert('로그아웃 성공!');location.href='main.jsp';</script>");
     }
+    else if(action.equals("CHANGENAME")){
+
+    }
+    else if(action.equals("DELETEMEMBER")){
+
+    }
 %>

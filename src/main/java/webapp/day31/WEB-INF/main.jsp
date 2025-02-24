@@ -34,7 +34,7 @@
             <td><%=session.getAttribute("userName")%>님, 환영합니다! :D</td>
         </tr>
         <tr>
-            <td><a href="controller.jsp">마이페이지버튼</a></td>
+            <td><a href="mypage.jsp">마이페이지버튼</a></td>
         </tr>
         <tr>
             <td><a href="controller.jsp?action=LOGOUT">로그아웃</a></td>
