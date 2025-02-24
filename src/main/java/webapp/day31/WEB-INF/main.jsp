@@ -1,5 +1,7 @@
 <%@ page import="webapp.day31.model.dao.MemberDAO" %>
 <%@ page import="webapp.day31.model.dto.MemberDTO" %>
+<%@ page import="webapp.day31.model.dto.BoardDTO" %>
+<%@ page import="webapp.day31.model.dao.BoardDAO" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
@@ -57,16 +59,45 @@
 
     <div class="content-box">
         <h3>글 목록</h3>
-        <!-- 글 목록 내용 -->
         <table class="table">
             <thead>
             <tr>
                 <th>번호</th>
                 <th>제목</th>
+                <th>작성자</th>
+                <th>조회수</th>
             </tr>
             </thead>
             <tbody>
+            <%
+                BoardDAO boardDAO = new BoardDAO();
+                BoardDTO searchDTO = new BoardDTO();
+                searchDTO.setCondition("SELECTALL");
+                ArrayList<BoardDTO> boardList = boardDAO.selectAll(searchDTO);
 
+                if(boardList.isEmpty()) {
+            %>
+            <tr>
+                <td colspan="4" class="text-center">등록된 게시글이 없습니다.</td>
+            </tr>
+            <%
+            } else {
+                for(BoardDTO board : boardList) {
+            %>
+            <tr>
+                <td><%=board.getBnum()%></td>
+                <td>
+                    <a href="controller.jsp?action=BOARD_DETAIL&bnum=<%=board.getBnum()%>">
+                        <%=board.getTitle()%>
+                    </a>
+                </td>
+                <td><%=board.getWriter()%></td>
+                <td><%=board.getCnt()%></td>
+            </tr>
+            <%
+                    }
+                }
+            %>
             </tbody>
         </table>
     </div>
