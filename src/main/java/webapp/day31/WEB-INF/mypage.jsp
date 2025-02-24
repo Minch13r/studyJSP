@@ -29,8 +29,7 @@
 <!-- 네비게이션 바 추가 -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand" href="main.jsp">홈으로</a>
-        <div class="navbar-nav ms-auto">
+        <div class="navbar-nav w-100 justify-content-center">
                 <span class="nav-item nav-link text-white">
                     <%=session.getAttribute("userName")%>님 환영합니다
                 </span>

@@ -26,7 +26,7 @@
             </div>
             <div class="button-group">
                 <button type="submit" class="btn btn-primary">로그인</button>
-                <a href="controller.jsp" class="btn btn-secondary">회원가입</a>
+                <a href="join.jsp" class="btn btn-secondary">회원가입</a>
             </div>
         </form>
     </div>
