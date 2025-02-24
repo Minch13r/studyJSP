@@ -20,10 +20,35 @@ public class MemberDAO {
     Connection conn = null;
     PreparedStatement pstmt = null;
 
-    public ArrayList<MemberDTO> selectAll(MemberDTO memberDTO){
-        // 신규회원목록보기
-        return null;
+    // 신규회원목록보기
+    public ArrayList<MemberDTO> selectAll(MemberDTO memberDTO) {
+        ArrayList<MemberDTO> datas = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = JDBCUtil.connect();
+            pstmt = conn.prepareStatement(SELECTALL);
+            ResultSet rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                MemberDTO member = new MemberDTO();
+                member.setMid(rs.getString("MID"));
+                member.setPassword(rs.getString("PASSWORD"));
+                member.setName(rs.getString("NAME"));
+                member.setRegdate(rs.getDate("REGDATE"));
+                datas.add(member);
+            }
+            rs.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        } finally {
+            JDBCUtil.disconnect(conn, pstmt);
+        }
+
+        return datas;
     }
+
     // 로그인 & 로그아웃
     public MemberDTO selectOne(MemberDTO memberDTO){
         MemberDTO data=null;

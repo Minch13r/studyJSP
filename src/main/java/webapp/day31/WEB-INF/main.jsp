@@ -1,3 +1,6 @@
+<%@ page import="webapp.day31.model.dao.MemberDAO" %>
+<%@ page import="webapp.day31.model.dto.MemberDTO" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -55,12 +58,47 @@
     <div class="content-box">
         <h3>글 목록</h3>
         <!-- 글 목록 내용 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
 
     <div class="content-box">
         <h3>신규 회원 목록</h3>
-        <!-- 신규 회원 목록 내용 -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>가입일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+                MemberDAO memberDAO = new MemberDAO();
+                ArrayList<MemberDTO> memberList = memberDAO.selectAll(new MemberDTO());
+                for(MemberDTO member : memberList) {
+            %>
+            <tr>
+                <td><%=member.getMid()%></td>
+                <td><%=member.getName()%></td>
+                <td><%=member.getRegdate()%></td>
+            </tr>
+            <%
+                }
+            %>
+            </tbody>
+        </table>
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

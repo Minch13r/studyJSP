@@ -14,9 +14,10 @@ public class BoardDAO {
     final String UPDATE_CNT = "UPDATE BOARD SET CNT = CNT + 1 WHERE BNUM = ?";
     final String DELETE = "DELETE FROM BOARD WHERE BNUM = ?";
 
+    // 글목록보기
+    // 글검색하기
     public ArrayList<BoardDTO> selectAll(BoardDTO boardDTO){
-        // 글목록보기
-        // 글검색하기
+
         return null;
     }
     public BoardDTO selectOne(BoardDTO boardDTO){

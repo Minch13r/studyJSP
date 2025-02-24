@@ -8,6 +8,15 @@ public class BoardDTO {
     private String content;
     private String writer; // FK
     private int cnt;
+    private String condition;
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
 
     public Date getRegdate() {
         return regdate;
