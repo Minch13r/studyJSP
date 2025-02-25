@@ -14,7 +14,7 @@ public class BoardDAO {
     final String SELECTALL_SEARCH_WRITER = "SELECT * FROM BOARD WHERE WRITER LIKE CONCAT('%',?,'%')";
     final String SELECTONE = "SELECT * FROM BOARD WHERE BNUM = ?";
     final String INSERT = "INSERT INTO BOARD (TITLE, CONTENT, WRITER) VALUES (?, ?, ?)";
-    final String UPDATE_CONTENT = "UPDATE BOARD SET CONTENT = ? WHERE BNUM = ?";
+    final String UPDATE_CONTENT = "UPDATE BOARD SET TITLE = ?, CONTENT = ? WHERE BNUM = ?";
     final String UPDATE_CNT = "UPDATE BOARD SET CNT = CNT + 1 WHERE BNUM = ?";
     final String DELETE = "DELETE FROM BOARD WHERE BNUM = ?";
 
@@ -140,8 +140,9 @@ public class BoardDAO {
 
             if(boardDTO.getCondition().equals("UPDATE_CONTENT")) {
                 pstmt = conn.prepareStatement(UPDATE_CONTENT);
-                pstmt.setString(1, boardDTO.getContent());
-                pstmt.setInt(2, boardDTO.getBnum());
+                pstmt.setString(1, boardDTO.getTitle());
+                pstmt.setString(2, boardDTO.getContent());
+                pstmt.setInt(3, boardDTO.getBnum());
             }
             else if(boardDTO.getCondition().equals("UPDATE_CNT")) {
                 pstmt = conn.prepareStatement(UPDATE_CNT);

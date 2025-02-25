@@ -63,7 +63,7 @@
                                     currentUser.equals(board.getWriter())) {
                         %>
                         <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-warning flex-grow-1"
+                            <button type="button" class="btn btn-success flex-grow-1"
                                     onclick="location.href='controller.jsp?action=EDITFORM&bnum=<%= board.getBnum() %>'">
                                 수정하기
                             </button>

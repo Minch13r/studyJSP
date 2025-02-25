@@ -9,7 +9,6 @@
 <jsp:useBean id="memberDAO" class="webapp.day31.model.dao.MemberDAO" />
 <jsp:useBean id="boardDTO" class="webapp.day31.model.dto.BoardDTO" />
 <jsp:useBean id="boardDAO" class="webapp.day31.model.dao.BoardDAO" />
-<jsp:setProperty name="*" property="*" />
 <!-- 세팅을 대신해주는 property -->
 <jsp:setProperty name="memberDTO" property="*"/>
 <%
@@ -137,10 +136,6 @@
         }
     }
 
-
-
-
-
     else if(action.equals("INSERTBOARD")){
         String title = request.getParameter("title");
         String content = request.getParameter("content");
@@ -158,8 +153,53 @@
             out.println("<script>alert('게시글 등록에 실패했습니다.');history.go(-1);</script>");
         }
     }
-    
+
+    else if(action.equals("EDITFORM")){
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+        boardDTO.setBnum(bnum);
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO board = boardDAO.selectOne(boardDTO);
+
+        // 작성자 확인
+        String currentUser = (String)session.getAttribute("mid");
+        if(board != null && board.getWriter().equals(currentUser)) {
+            request.setAttribute("board", board);
+            pageContext.forward("editform.jsp");
+        } else {
+            out.println("<script>alert('수정 권한이 없습니다.');history.go(-1);</script>");
+        }
+    }
+
+    else if(action.equals("UPDATE")){
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        String currentUser = (String)session.getAttribute("mid");
+
+        // 기존 게시글 정보 확인
+        boardDTO.setBnum(bnum);
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO existingBoard = boardDAO.selectOne(boardDTO);
+
+        if(existingBoard != null && existingBoard.getWriter().equals(currentUser)) {
+            // 수정 권한이 있는 경우
+            boardDTO.setTitle(title);
+            boardDTO.setContent(content);
+            boardDTO.setCondition("UPDATE_CONTENT");
+
+            boolean result = boardDAO.update(boardDTO);
+
+            if(result) {
+                out.println("<script>alert('게시글이 성공적으로 수정되었습니다.');location.href='controller.jsp?action=UPDATECNT&bnum=" + bnum + "';</script>");
+            } else {
+                out.println("<script>alert('게시글 수정에 실패했습니다.');history.go(-1);</script>");
+            }
+        } else {
+            out.println("<script>alert('수정 권한이 없습니다.');history.go(-1);</script>");
+        }
+    }
+
     else if(action.equals("ADDCOMMENT")){
-        
+
     }
 %>
