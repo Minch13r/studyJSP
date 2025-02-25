@@ -35,7 +35,9 @@
             </div>
         </form>
     </div>
+
     <% } else { %>
+
     <div class="welcome-message">
         <%=session.getAttribute("userName")%>님, 환영합니다! :D
     </div>
@@ -73,16 +75,16 @@
                 BoardDAO boardDAO = new BoardDAO();
                 BoardDTO searchDTO = new BoardDTO();
                 searchDTO.setCondition("SELECTALL");
-                ArrayList<BoardDTO> boardList = boardDAO.selectAll(searchDTO);
+                ArrayList<BoardDTO> datas = boardDAO.selectAll(searchDTO);
 
-                if(boardList.isEmpty()) {
+                if(datas.isEmpty()) {
             %>
             <tr>
                 <td colspan="4" class="text-center">등록된 게시글이 없습니다.</td>
             </tr>
             <%
             } else {
-                for(BoardDTO board : boardList) {
+                for(BoardDTO board : datas) {
             %>
             <tr>
                 <td><%=board.getBnum()%></td>
