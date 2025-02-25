@@ -82,10 +82,23 @@ public class MemberDAO {
     }
 
     // 회원가입
-    public boolean insert(MemberDTO memberDTO){
-
-        return false;
+    public boolean insert(MemberDTO memberDTO) {
+        try {
+            conn = JDBCUtil.connect();
+            pstmt = conn.prepareStatement(INSERT);
+            pstmt.setString(1, memberDTO.getMid());
+            pstmt.setString(2, memberDTO.getPassword());
+            pstmt.setString(3, memberDTO.getName());
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            JDBCUtil.disconnect(conn, pstmt);
+        }
     }
+
 
     // 이름변경
     public boolean update(MemberDTO memberDTO) {

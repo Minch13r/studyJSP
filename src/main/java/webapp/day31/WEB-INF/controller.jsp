@@ -37,25 +37,33 @@
         // session.invalidate();
         out.println("<script>alert('로그아웃 성공!');location.href='main.jsp';</script>");
     }
-    else if(action.equals("JOIN")){
 
+    else if(action.equals("JOIN")){
+        memberDTO.setCondition("INSERT");
+        boolean result = memberDAO.insert(memberDTO);
+
+        if(result){
+            out.println("<script>alert('회원가입이 완료되었습니다.');location.href='main.jsp';</script>");
+        }
+        else {
+            out.println("<script>alert('회원가입에 실패했습니다.');history.go(-1);</script>");
+        }
     }
+
     else if(action.equals("UPDATENAME")){
-        // 현재 로그인된 사용자의 ID를 세션에서 가져옴
         String sessionMid = (String)session.getAttribute("mid");
         memberDTO.setMid(sessionMid);
         memberDTO.setCondition("UPDATE");
 
-        // 이름 업데이트 시도
         boolean result = memberDAO.update(memberDTO);
 
         if(result){
-            // 업데이트 성공 시 세션의 사용자 이름도 업데이트
+            // 성공시
             session.setAttribute("userName", memberDTO.getName());
             out.println("<script>alert('이름이 성공적으로 변경되었습니다.');location.href='controller.jsp?action=MYPAGE';</script>");
         }
         else{
-            // 업데이트 실패 시
+            // 실패 시
             out.println("<script>alert('이름 변경에 실패했습니다.');history.go(-1);</script>");
         }
     }
@@ -67,8 +75,7 @@
         boolean result = memberDAO.delete(memberDTO);
 
         if(result){
-            // 세션 정리
-            session.invalidate();  // 모든 세션 데이터 삭제
+            session.invalidate();  // 모든 세션 초기화
             out.println("<script>alert('회원탈퇴가 완료되었습니다.');location.href='main.jsp';</script>");
         }
         else {
@@ -76,10 +83,6 @@
         }
     }
 
-
-    else if(action.equals("JOINPAGE")){
-        response.sendRedirect("join.jsp");
-    }
     else if(action.equals("MYPAGE")){
         memberDTO.setMid((String)session.getAttribute("mid"));
         memberDTO.setCondition("MYPAGE");

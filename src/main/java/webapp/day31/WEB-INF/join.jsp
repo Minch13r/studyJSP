@@ -38,9 +38,11 @@
                 <button type="button" class="btn btn-secondary" onclick="location.href='main.jsp'">
                     취소
                 </button>
-                <button type="button" class="btn btn-primary" onclick="SignUp('signup')">
-                    회원가입
-                </button>
+                <form action="controller.jsp" method="POST">
+                    <input type="hidden" name="action" value="JOIN">
+                    <button type="submit" class="btn btn-primary">회원가입</button>
+                </form>
+
             </td>
             </tr>
         </table>
