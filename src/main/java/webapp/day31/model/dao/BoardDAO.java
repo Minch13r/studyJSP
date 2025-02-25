@@ -12,8 +12,8 @@ public class BoardDAO {
     final String SELECTALL = "SELECT * FROM BOARD";
     final String SELECTALL_SEARCH_TITLE = "SELECT * FROM BOARD WHERE TITLE LIKE CONCAT('%',?,'%')";
     final String SELECTALL_SEARCH_WRITER = "SELECT * FROM BOARD WHERE WRITER LIKE CONCAT('%',?,'%')";
-    final String SELECTONE = "SELECT * FROM MEMBER WHERE BNUM = ?";
-    final String INSERT = "INSERT INTO BOARD (BNUM, TITLE, WRITER) VALUES (?, ?, ?)";
+    final String SELECTONE = "SELECT * FROM BOARD WHERE BNUM = ?";
+    final String INSERT = "INSERT INTO BOARD (TITLE, CONTENT, WRITER) VALUES (?, ?, ?)";
     final String UPDATE_CONTENT = "UPDATE BOARD SET CONTENT = ? WHERE BNUM = ?";
     final String UPDATE_CNT = "UPDATE BOARD SET CNT = CNT + 1 WHERE BNUM = ?";
     final String DELETE = "DELETE FROM BOARD WHERE BNUM = ?";
@@ -45,6 +45,7 @@ public class BoardDAO {
             }
             else if(boardDTO.getCondition().equals("SELECTALL_SEARCH_TITLE")){
                 pstmt = conn.prepareStatement(SELECTALL_SEARCH_TITLE);
+                pstmt.setString(1, boardDTO.getTitle());
                 ResultSet rs = pstmt.executeQuery();
                 while(rs.next()) {
                     BoardDTO board = new BoardDTO();
@@ -60,6 +61,7 @@ public class BoardDAO {
             }
             else if(boardDTO.getCondition().equals("SELECTALL_SEARCH_WRITER")){
                 pstmt = conn.prepareStatement(SELECTALL_SEARCH_WRITER);
+                pstmt.setString(1, boardDTO.getWriter());
                 ResultSet rs = pstmt.executeQuery();
                 while(rs.next()) {
                     BoardDTO board = new BoardDTO();
@@ -81,18 +83,40 @@ public class BoardDAO {
         return datas;
     }
 
-    // 글선택하기
+    // 글 선택하기
     public BoardDTO selectOne(BoardDTO boardDTO){
+        try {
+            conn = JDBCUtil.connect();
+            pstmt = conn.prepareStatement(SELECTONE);
+            pstmt.setInt(1, boardDTO.getBnum());
+            ResultSet rs = pstmt.executeQuery();
+
+            if(rs.next()) {
+                BoardDTO board = new BoardDTO();
+                board.setBnum(rs.getInt("BNUM"));
+                board.setTitle(rs.getString("TITLE"));
+                board.setWriter(rs.getString("WRITER"));
+                board.setContent(rs.getString("CONTENT"));
+                board.setCnt(rs.getInt("CNT"));
+                board.setRegdate(rs.getDate("REGDATE"));
+                return board;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            JDBCUtil.disconnect(conn, pstmt);
+        }
         return null;
     }
+
 
     // 글작성
     public boolean insert(BoardDTO boardDTO){
         try {
-            Connection conn = JDBCUtil.connect();
-            ResultSet rs = conn.prepareStatement(INSERT).executeQuery();
-            pstmt.setInt(1, boardDTO.getBnum());
-            pstmt.setString(2, boardDTO.getTitle());
+            conn = JDBCUtil.connect();
+            pstmt = conn.prepareStatement(INSERT);
+            pstmt.setString(1, boardDTO.getTitle());
+            pstmt.setString(2, boardDTO.getContent());
             pstmt.setString(3, boardDTO.getWriter());
             int result = pstmt.executeUpdate();
             return result > 0;
@@ -103,6 +127,7 @@ public class BoardDAO {
             JDBCUtil.disconnect(conn, pstmt);
         }
     }
+
 
     // 내용변경
     // 조회수++
@@ -136,18 +161,22 @@ public class BoardDAO {
 
 
     // 글삭제
-    public boolean delete(BoardDTO boardDTO){
+    public boolean delete(BoardDTO boardDTO) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
         try {
             conn = JDBCUtil.connect();
             pstmt = conn.prepareStatement(DELETE);
             pstmt.setInt(1, boardDTO.getBnum());
             int result = pstmt.executeUpdate();
             return result > 0;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
             JDBCUtil.disconnect(conn, pstmt);
         }
     }
+
 }

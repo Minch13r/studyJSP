@@ -19,18 +19,16 @@
                     <form action="controller.jsp" method="post">
                         <div class="mb-3">
                             <label for="title" class="form-label">제목</label>
-                            <input type="text" class="form-control" id="title" name="title"
-                                   required placeholder="제목을 입력해주세요">
+                            <input type="text" class="form-control" id="title" name="title" required placeholder="제목을 입력해주세요">
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">내용</label>
-                            <textarea class="form-control" id="content" name="content"
-                                      rows="10" required placeholder="내용을 입력해주세요"></textarea>
+                            <textarea class="form-control" id="content" name="content" rows="10" required placeholder="내용을 입력해주세요"></textarea>
                         </div>
                         <div class="d-grid gap-2">
+                            <input type="hidden" name="action" value="INSERTBOARD">
                             <button type="submit" class="btn btn-primary">글 작성하기</button>
-                            <button type="button" class="btn btn-secondary"
-                                    onclick="location.href='list.jsp'">목록으로</button>
+                            <button type="button" class="btn btn-secondary" onclick="location.href='main.jsp'">목록으로</button>
                         </div>
                     </form>
                 </div>

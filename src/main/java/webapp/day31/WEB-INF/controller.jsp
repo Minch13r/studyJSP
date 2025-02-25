@@ -1,10 +1,15 @@
 <%@ page import="webapp.day31.model.dto.MemberDTO" %>
 <%@ page import="webapp.day31.model.dao.MemberDAO" %>
+<%@ page import="webapp.day31.model.dto.BoardDTO" %>
+<%@ page import="webapp.day31.model.dao.BoardDAO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!-- jsp:useBean은 new를 대신해준다. -->
 <jsp:useBean id="memberDTO" class="webapp.day31.model.dto.MemberDTO" />
 <jsp:useBean id="memberDAO" class="webapp.day31.model.dao.MemberDAO" />
+<jsp:useBean id="boardDTO" class="webapp.day31.model.dto.BoardDTO" />
+<jsp:useBean id="boardDAO" class="webapp.day31.model.dao.BoardDAO" />
+<jsp:setProperty name="*" property="*" />
 <!-- 세팅을 대신해주는 property -->
 <jsp:setProperty name="memberDTO" property="*"/>
 <%
@@ -93,15 +98,68 @@
         pageContext.forward("mypage.jsp"); // 응답 : 리다이렉트 vs 포워드
     }
 
-    else if(action.equals("UPDATECONTENT")){
-
+    else if(action.equals("UPDATECNT")){
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+        boardDTO.setBnum(bnum);
+        boardDTO.setCondition("UPDATE_CNT");
+        boardDAO.update(boardDTO);
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO result = boardDAO.selectOne(boardDTO);
+        
+        request.setAttribute("board", result);
+        pageContext.forward("view.jsp");
     }
 
-    else if(action.equals("DELETEBOARD")){
+    else if(action.equals("DELETE")){
+        // 게시글 번호 받아오기
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
 
+        // 현재 로그인한 사용자 확인
+        String currentUser = (String)session.getAttribute("mid");
+
+        // 게시글 정보 조회
+        boardDTO.setBnum(bnum);
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO board = boardDAO.selectOne(boardDTO);
+
+        // 작성자와 현재 사용자가 같은지 확인
+        if(board != null && board.getWriter().equals(currentUser)) {
+            // 삭제 실행
+            boolean result = boardDAO.delete(boardDTO);
+
+            if(result) {
+                out.println("<script>alert('게시글이 성공적으로 삭제되었습니다.');location.href='main.jsp';</script>");
+            } else {
+                out.println("<script>alert('게시글 삭제에 실패했습니다.');history.go(-1);</script>");
+            }
+        } else {
+            out.println("<script>alert('삭제 권한이 없습니다.');history.go(-1);</script>");
+        }
     }
+
+
+
+
 
     else if(action.equals("INSERTBOARD")){
+        String title = request.getParameter("title");
+        String content = request.getParameter("content");
+        String writer = (String)session.getAttribute("mid");
+        boardDTO.setTitle(title);
+        boardDTO.setWriter(writer);
+        boardDTO.setContent(content);
+        boardDTO.setCondition("INSERT");
+        boolean result = boardDAO.insert(boardDTO);
 
+        if(result){
+            out.println("<script>alert('게시글이 성공적으로 등록되었습니다.');location.href='main.jsp';</script>");
+        }
+        else{
+            out.println("<script>alert('게시글 등록에 실패했습니다.');history.go(-1);</script>");
+        }
+    }
+    
+    else if(action.equals("ADDCOMMENT")){
+        
     }
 %>

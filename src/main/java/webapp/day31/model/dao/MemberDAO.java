@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class MemberDAO {
-    final String SELECTALL = "SELECT * FROM MEMBER";
+    final String SELECTALL = "SELECT * FROM MEMBER ORDER BY REGDATE ASC";
     final String SELECTONE = "SELECT * FROM MEMBER WHERE MID = ? AND PASSWORD = ?";
     final String SELECTONE_MID = "SELECT * FROM MEMBER WHERE MID=?";
     final String INSERT = "INSERT INTO MEMBER (MID, PASSWORD, NAME) VALUES (?, ?, ?)";
