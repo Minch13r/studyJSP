@@ -35,6 +35,39 @@ public class BoardDAO {
                     board.setBnum(rs.getInt("BNUM"));
                     board.setTitle(rs.getString("TITLE"));
                     board.setWriter(rs.getString("WRITER"));
+                    board.setContent(rs.getString("CONTENT"));
+                    board.setCnt(rs.getInt("CNT"));
+                    board.setRegdate(rs.getDate("REGDATE"));
+                    datas.add(board);
+                }
+                rs.close();
+            }
+            else if(boardDTO.getCondition().equals("SELECTALL_SEARCH_TITLE")){
+                pstmt = conn.prepareStatement(SELECTALL_SEARCH_TITLE);
+                ResultSet rs = pstmt.executeQuery();
+                while(rs.next()) {
+                    BoardDTO board = new BoardDTO();
+                    board.setBnum(rs.getInt("BNUM"));
+                    board.setTitle(rs.getString("TITLE"));
+                    board.setWriter(rs.getString("WRITER"));
+                    board.setContent(rs.getString("CONTENT"));
+                    board.setCnt(rs.getInt("CNT"));
+                    board.setRegdate(rs.getDate("REGDATE"));
+                    datas.add(board);
+                }
+                rs.close();
+            }
+            else if(boardDTO.getCondition().equals("SELECTALL_SEARCH_WRITER")){
+                pstmt = conn.prepareStatement(SELECTALL_SEARCH_WRITER);
+                ResultSet rs = pstmt.executeQuery();
+                while(rs.next()) {
+                    BoardDTO board = new BoardDTO();
+                    board.setBnum(rs.getInt("BNUM"));
+                    board.setTitle(rs.getString("TITLE"));
+                    board.setWriter(rs.getString("WRITER"));
+                    board.setContent(rs.getString("CONTENT"));
+                    board.setCnt(rs.getInt("CNT"));
+                    board.setRegdate(rs.getDate("REGDATE"));
                     datas.add(board);
                 }
                 rs.close();
@@ -46,21 +79,27 @@ public class BoardDAO {
         }
         return datas;
     }
+
+    // 글선택하기
     public BoardDTO selectOne(BoardDTO boardDTO){
-        // 글선택하기
         return null;
     }
+
+    // 글작성
     public boolean insert(BoardDTO boardDTO){
-        // 글작성
+
         return false;
     }
+
+    // 내용변경
+    // 조회수++
     public boolean update(BoardDTO boardDTO){
-        // 내용변경
-        // 조회수++
+
         return false;
     }
+
+    // 글삭제
     public boolean delete(BoardDTO boardDTO){
-        // 글삭제
         return false;
     }
 }
