@@ -92,4 +92,16 @@
         request.setAttribute("regdate", memberDTO.getRegdate());
         pageContext.forward("mypage.jsp"); // 응답 : 리다이렉트 vs 포워드
     }
+
+    else if(action.equals("UPDATECONTENT")){
+
+    }
+
+    else if(action.equals("DELETEBOARD")){
+
+    }
+
+    else if(action.equals("INSERTBOARD")){
+
+    }
 %>
