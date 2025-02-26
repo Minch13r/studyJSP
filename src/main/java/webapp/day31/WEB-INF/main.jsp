@@ -50,14 +50,16 @@
 
     <div class="search-section">
         <form action="controller.jsp" method="GET" class="d-flex gap-3">
+            <input type="hidden" name="action" value="SEARCH">
             <select name="searchCondition" class="form-select" style="width: 150px;">
-                <option>제목</option>
-                <option>작성자</option>
+                <option value="SELECTALL_SEARCH_TITLE">제목</option>
+                <option value="SELECTALL_SEARCH_WRITER">작성자</option>
             </select>
             <input type="text" name="searchKeyword" class="form-control" placeholder="검색어를 입력하세요" required>
             <button type="submit" class="btn btn-primary" style="width: 100px;">검색</button>
         </form>
     </div>
+
 
     <div class="content-box">
         <h3>글 목록</h3>
@@ -73,15 +75,23 @@
             </thead>
             <tbody>
             <%
-                BoardDAO boardDAO = new BoardDAO();
-                BoardDTO searchDTO = new BoardDTO();
-                searchDTO.setCondition("SELECTALL");
-                ArrayList<BoardDTO> datas = boardDAO.selectAll(searchDTO);
+                ArrayList<BoardDTO> datas = null;
+
+                // 검색 결과가 있는지 확인
+                if(request.getAttribute("boardList") != null) {
+                    datas = (ArrayList<BoardDTO>)request.getAttribute("boardList");
+                } else {
+                    // 검색 결과가 없으면 모든 게시글 가져오기
+                    BoardDAO boardDAO = new BoardDAO();
+                    BoardDTO searchDTO = new BoardDTO();
+                    searchDTO.setCondition("SELECTALL");
+                    datas = boardDAO.selectAll(searchDTO);
+                }
 
                 if(datas.isEmpty()) {
             %>
             <tr>
-                <td colspan="4" class="text-center">등록된 게시글이 없습니다.</td>
+                <td colspan="5" class="text-center">등록된 게시글이 없습니다.</td>
             </tr>
             <%
             } else {
@@ -105,6 +115,7 @@
             </tbody>
         </table>
     </div>
+
 
     <div class="content-box">
         <h3>신규 회원 목록</h3>

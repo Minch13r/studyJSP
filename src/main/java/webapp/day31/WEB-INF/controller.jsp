@@ -2,6 +2,7 @@
 <%@ page import="webapp.day31.model.dao.MemberDAO" %>
 <%@ page import="webapp.day31.model.dto.BoardDTO" %>
 <%@ page import="webapp.day31.model.dao.BoardDAO" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!-- jsp:useBean은 new를 대신해준다. -->
@@ -202,4 +203,24 @@
     else if(action.equals("ADDCOMMENT")){
 
     }
+
+    else if(action.equals("SEARCH")){
+        String searchCondition = request.getParameter("searchCondition");
+        String searchKeyword = request.getParameter("searchKeyword");
+
+        boardDTO.setCondition(searchCondition);
+
+        if(searchCondition.equals("SELECTALL_SEARCH_TITLE")){
+            boardDTO.setTitle(searchKeyword);
+        }
+        else if(searchCondition.equals("SELECTALL_SEARCH_WRITER")){
+            boardDTO.setWriter(searchKeyword);
+        }
+
+        ArrayList<BoardDTO> boardList = boardDAO.selectAll(boardDTO);
+        request.setAttribute("boardList", boardList);
+        pageContext.forward("main.jsp");
+    }
+
+
 %>
