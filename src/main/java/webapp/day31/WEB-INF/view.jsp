@@ -1,7 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="webapp.day31.model.dao.BoardDAO" %>
 <%@ page import="webapp.day31.model.dto.BoardDTO" %>
-<!-- 게시판 DTO 클래스 import -->
+<%@ page import="webapp.day31.model.dao.ReplyDAO" %>
+<%@ page import="webapp.day31.model.dto.ReplyDTO" %>
+<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,7 +76,7 @@
                         </div>
 
                         <% } %>
-                        <button type="button" class="btn btn-secondary" onclick="location.href='main.jsp'">
+                        <button type="button" class="btn btn-secondary" onclick="location.href='controller.jsp?action=MAINPAGE'">
                             목록으로
                         </button>
                     </div>
@@ -82,18 +84,54 @@
 
                     <div class="mt-5">
                         <h4>댓글</h4>
+                        <% if(currentUser != null) { %>
                         <form action="controller.jsp" method="post" class="mb-4">
                             <input type="hidden" name="action" value="ADDCOMMENT">
-                            <input type="hidden" name="boardId" value="<%= board != null ? board.getBnum() : "" %>">
+                            <input type="hidden" name="bnum" value="<%= board != null ? board.getBnum() : "" %>">
                             <div class="mb-3">
-                                <textarea class="form-control" name="comment" rows="3" placeholder="댓글을 입력해주세요"></textarea>
+                                <textarea class="form-control" name="content" rows="3" placeholder="댓글을 입력해주세요" required></textarea>
                             </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary">댓글 작성</button>
                             </div>
                         </form>
+                        <% } else { %>
+                        <div class="alert alert-info">
+                            댓글을 작성하려면 로그인이 필요합니다.
+                        </div>
+                        <% } %>
 
                         <div class="comment-list">
+                            <%
+                                ArrayList<ReplyDTO> datas = (ArrayList<ReplyDTO>)request.getAttribute("replyList");
+                                if(datas != null && !datas.isEmpty()) {
+                                    for(ReplyDTO reply : datas) {
+                            %>
+                            <div class="card mb-2">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="card-subtitle mb-2 text-muted"><%= reply.getWriter() %></h6>
+                                        <small class="text-muted"><%= reply.getRegdate() %></small>
+                                    </div>
+                                    <p class="card-text"><%= reply.getContent() %></p>
+                                    <% if(currentUser != null && currentUser.equals(reply.getWriter())) { %>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                onclick="if(confirm('댓글을 삭제하시겠습니까?')) location.href='controller.jsp?action=DELETEREPLY&rnum=<%= reply.getRnum() %>&bnum=<%= board.getBnum() %>'">
+                                            삭제
+                                        </button>
+                                    </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <%
+                                }
+                            } else {
+                            %>
+                            <div class="text-center p-3 bg-light rounded">
+                                <p class="text-muted mb-0">등록된 댓글이 없습니다.</p>
+                            </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -101,6 +139,7 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

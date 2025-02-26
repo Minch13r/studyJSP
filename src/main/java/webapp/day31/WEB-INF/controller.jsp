@@ -3,11 +3,15 @@
 <%@ page import="webapp.day31.model.dto.BoardDTO" %>
 <%@ page import="webapp.day31.model.dao.BoardDAO" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="webapp.day31.model.dto.ReplyDTO" %>
+<%@ page import="webapp.day31.model.dao.ReplyDAO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!-- jsp:useBean은 new를 대신해준다. -->
 <jsp:useBean id="memberDTO" class="webapp.day31.model.dto.MemberDTO" />
 <jsp:useBean id="memberDAO" class="webapp.day31.model.dao.MemberDAO" />
+<jsp:useBean id="replyDAO" class="webapp.day31.model.dao.ReplyDAO" />
+<jsp:useBean id="replyDTO" class="webapp.day31.model.dto.ReplyDTO" />
 <jsp:useBean id="boardDTO" class="webapp.day31.model.dto.BoardDTO" />
 <jsp:useBean id="boardDAO" class="webapp.day31.model.dao.BoardDAO" />
 <!-- 세팅을 대신해주는 property -->
@@ -107,8 +111,14 @@
         BoardDTO result = boardDAO.selectOne(boardDTO);
 
         request.setAttribute("board", result);
+
+        replyDTO.setBnum(bnum);
+        ArrayList<ReplyDTO> replyList = replyDAO.selectAll(replyDTO);
+        request.setAttribute("replyList", replyList);
+
         pageContext.forward("view.jsp");
     }
+
 
     else if(action.equals("DELETE")){
         // 게시글 번호 받아오기
@@ -171,6 +181,10 @@
         }
     }
 
+    else if(action.equals("MAINPAGE")){
+        pageContext.forward("main.jsp");
+    }
+
     else if(action.equals("UPDATE")){
         int bnum = Integer.parseInt(request.getParameter("bnum"));
         String title = request.getParameter("title");
@@ -201,8 +215,29 @@
     }
 
     else if(action.equals("ADDCOMMENT")){
+        String content = request.getParameter("content");
+        String writer = (String)session.getAttribute("mid");
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
 
+        // 디버깅 로그 추가
+        System.out.println("댓글 등록 시도 - 내용: " + content + ", 작성자: " + writer + ", 게시글번호: " + bnum);
+
+        replyDTO.setContent(content);
+        replyDTO.setWriter(writer);
+        replyDTO.setBnum(bnum);
+
+        boolean result = replyDAO.insert(replyDTO);
+        System.out.println("댓글 등록 결과: " + result);
+
+        if(result){
+            response.sendRedirect("controller.jsp?action=SELECTONE&bnum=" + bnum);
+        }
+        else{
+            out.println("<script>alert('댓글 등록에 실패했습니다.');history.go(-1);</script>");
+        }
     }
+
+
 
     else if(action.equals("SEARCH")){
         String searchCondition = request.getParameter("searchCondition");
@@ -221,4 +256,21 @@
         request.setAttribute("boardList", boardList);
         pageContext.forward("main.jsp");
     }
+
+    else if(action.equals("SELECTONE")){
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+
+        boardDTO.setBnum(bnum);
+
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO board = boardDAO.selectOne(boardDTO);
+        request.setAttribute("board", board);
+        replyDTO.setBnum(bnum);
+
+        ArrayList<ReplyDTO> replyList = replyDAO.selectAll(replyDTO);
+        request.setAttribute("replyList", replyList);
+
+        pageContext.forward("view.jsp");
+    }
+
 %>
