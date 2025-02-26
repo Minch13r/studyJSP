@@ -9,14 +9,17 @@
 <body>
 
 <script type="text/javascript">
+    <!-- 로그 -->
     console.log("로그 [${url}]");
     console.log("로그 [${flag}]");
-
+    <!-- 메세지 alert -->
     alert('${msg}');
+    <!-- true일 때 -->
     if(${flag}){
         var url = "${url}";
         location.href = url;
     }
+    <!-- false일 때 -->
     else{
         history.go(-1);
     }

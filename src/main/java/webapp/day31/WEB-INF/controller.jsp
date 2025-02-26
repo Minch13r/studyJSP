@@ -28,12 +28,15 @@
         return;
     }
 
+    // 로그인
     if(action.equals("LOGIN")){
         memberDTO.setCondition("LOGIN");
         memberDTO = memberDAO.selectOne(memberDTO);
+        // memberDTO에 값이 있을 때
         if(memberDTO != null){
             session.setAttribute("mid", memberDTO.getMid());
             session.setAttribute("userName", memberDTO.getName());
+            // main.jsp로 이동
             response.sendRedirect("main.jsp");
         }
         else{
@@ -43,8 +46,11 @@
             pageContext.forward("alert.jsp");
         }
     }
+
+    // 로그아웃
     else if(action.equals("LOGOUT")){
         // session.setAttribute("userName", null);
+        // 세션에서 userName 지우기
         session.removeAttribute("userName");
         // session.invalidate();
         //out.println("<script>alert('로그아웃 성공!');location.href='main.jsp';</script>");
@@ -54,6 +60,7 @@
         pageContext.forward("alert.jsp");
     }
 
+    // 회원가입
     else if(action.equals("JOIN")){
         memberDTO.setCondition("INSERT");
         boolean result = memberDAO.insert(memberDTO);
@@ -73,6 +80,7 @@
         }
     }
 
+    // 이름 변경
     else if(action.equals("UPDATENAME")){
         String sessionMid = (String)session.getAttribute("mid");
         memberDTO.setMid(sessionMid);
@@ -371,7 +379,7 @@
         // 게시글 상세 페이지 이동
         response.sendRedirect("controller.jsp?action=SELECTONE&bnum=" + bnum);
     }
-    
+
     else if (action.equals("EDITREPLYFORM")) {
         int bnum = Integer.parseInt(request.getParameter("bnum"));
         int rnum = Integer.parseInt(request.getParameter("rnum"));

@@ -19,6 +19,7 @@
     <% if(session.getAttribute("userName") == null){ %>
     <div class="login-box">
         <h3>로그인</h3>
+        <!-- controller.jsp로 값 보냄 -->
         <form action="controller.jsp" method="POST" class="login-form">
             <input type="hidden" name="action" value="LOGIN">
             <div class="form-group">
@@ -31,6 +32,7 @@
             </div>
             <div class="button-group">
                 <button type="submit" class="btn btn-primary">로그인</button>
+                <!-- 회원가입 버튼 누르면 join.jsp로 이동 -->
                 <a href="join.jsp" class="btn btn-secondary">회원가입</a>
             </div>
         </form>
@@ -42,17 +44,23 @@
         <%=session.getAttribute("userName")%>님, 환영합니다! :D
     </div>
     <div class="nav-buttons">
+        <!-- controller.jsp 안에서 action이 MYPAGE인 곳으로 이동 -->
         <a href="controller.jsp?action=MYPAGE" class="btn btn-primary">마이페이지</a>
+        <!-- controller.jsp 안에서 action인 LOGOUT인 곳으로 이동 -->
         <a href="controller.jsp?action=LOGOUT" class="btn btn-danger">로그아웃</a>
+        <!-- insertboard.jsp 파일로 이동 -->
         <a href="insertboard.jsp" class="btn btn-success">글작성</a>
     </div>
     <% } %>
 
     <div class="search-section">
+        <!-- controlelr.jsp에서 값을 받아옴 -->
         <form action="controller.jsp" method="GET" class="d-flex gap-3">
             <input type="hidden" name="action" value="SEARCH">
             <select name="searchCondition" class="form-select" style="width: 150px;">
+                <!-- 제목 검색 -->
                 <option value="SELECTALL_SEARCH_TITLE">제목</option>
+                <!-- 작성자 검색 -->
                 <option value="SELECTALL_SEARCH_WRITER">작성자</option>
             </select>
             <input type="text" name="searchKeyword" class="form-control" placeholder="검색어를 입력하세요" required>
@@ -66,6 +74,7 @@
         <table class="table">
             <thead>
             <tr>
+                <!-- 머리말 쪽 -->
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
@@ -74,6 +83,7 @@
             </tr>
             </thead>
             <tbody>
+            <!-- 몸통 부분 -->
             <%
                 ArrayList<BoardDTO> datas = null;
 
@@ -120,6 +130,7 @@
     <div class="content-box">
         <h3>신규 회원 목록</h3>
         <table class="table">
+            <!-- 머리말 -->
             <thead>
             <tr>
                 <th>아이디</th>
@@ -127,6 +138,7 @@
                 <th>가입일</th>
             </tr>
             </thead>
+            <!-- 몸통부분 -->
             <tbody>
             <%
                 MemberDAO memberDAO = new MemberDAO();
@@ -134,8 +146,11 @@
                 for(MemberDTO member : memberList) {
             %>
             <tr>
+                <!-- 아이디 -->
                 <td><%=member.getMid()%></td>
+                <!-- 이름 -->
                 <td><%=member.getName()%></td>
+                <!-- 가입일 -->
                 <td><%=member.getRegdate()%></td>
             </tr>
             <%
