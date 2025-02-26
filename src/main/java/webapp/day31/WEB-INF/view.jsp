@@ -106,6 +106,8 @@
                                 ArrayList<ReplyDTO> datas = (ArrayList<ReplyDTO>)request.getAttribute("replyList");
                                 if(datas != null && !datas.isEmpty()) {
                                     for(ReplyDTO reply : datas) {
+                                        // 수정할 댓글 번호 가져오기
+                                        Integer editRnum = (Integer)request.getAttribute("editRnum");
                             %>
                             <div class="card mb-2">
                                 <div class="card-body">
@@ -113,14 +115,37 @@
                                         <h6 class="card-subtitle mb-2 text-muted"><%= reply.getWriter() %></h6>
                                         <small class="text-muted"><%= reply.getRegdate() %></small>
                                     </div>
+
+                                    <% if(editRnum != null && editRnum.equals(reply.getRnum())) { %>
+                                    <!-- 수정 폼 -->
+                                    <form action="controller.jsp" method="post">
+                                        <input type="hidden" name="action" value="EDITREPLY">
+                                        <input type="hidden" name="bnum" value="<%= board.getBnum() %>">
+                                        <input type="hidden" name="rnum" value="<%= reply.getRnum() %>">
+                                        <div class="mb-2">
+                                            <textarea class="form-control" name="content" rows="3" required><%= reply.getContent() %></textarea>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="submit" class="btn btn-sm btn-success">저장</button>
+                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                    onclick="location.href='controller.jsp?action=SELECTONE&bnum=<%= board.getBnum() %>'">취소</button>
+                                        </div>
+                                    </form>
+                                    <% } else { %>
+                                    <!-- 일반 댓글 표시 -->
                                     <p class="card-text"><%= reply.getContent() %></p>
                                     <% if(currentUser != null && currentUser.equals(reply.getWriter())) { %>
                                     <div class="text-end">
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="location.href='controller.jsp?action=EDITREPLYFORM&rnum=<%= reply.getRnum() %>&bnum=<%= board.getBnum() %>'">
+                                            수정
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                                 onclick="if(confirm('댓글을 삭제하시겠습니까?')) location.href='controller.jsp?action=DELETEREPLY&rnum=<%= reply.getRnum() %>&bnum=<%= board.getBnum() %>'">
                                             삭제
                                         </button>
                                     </div>
+                                    <% } %>
                                     <% } %>
                                 </div>
                             </div>

@@ -332,8 +332,9 @@
     }
 
     else if(action.equals("DELETEREPLY")){
+        // 번호 파라미터로 받아오기
         int bnum = Integer.parseInt(request.getParameter("bnum"));
-        int rnum = Integer.parseInt(request.getParameter("rnum")); // 삭제할 댓글 번호도 필요합니다
+        int rnum = Integer.parseInt(request.getParameter("rnum"));
 
         // 게시글 정보 설정
         boardDTO.setBnum(bnum);
@@ -351,6 +352,48 @@
         // 삭제 후 해당 게시글의 댓글 목록을 다시 가져옴
         ArrayList<ReplyDTO> replyList = replyDAO.selectAll(replyDTO);
         request.setAttribute("replyList", replyList);
+
+        pageContext.forward("view.jsp");
+    }
+
+    else if (action.equals("EDITREPLY")) {
+        String content = request.getParameter("content");
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+        int rnum = Integer.parseInt(request.getParameter("rnum"));
+
+        // 수정할 댓글 정보 설정
+        replyDTO.setBnum(bnum);
+        replyDTO.setRnum(rnum);
+        replyDTO.setContent(content);
+
+        boolean flag = replyDAO.update(replyDTO);
+
+        // 게시글 상세 페이지 이동
+        response.sendRedirect("controller.jsp?action=SELECTONE&bnum=" + bnum);
+    }
+
+
+
+    else if (action.equals("EDITREPLYFORM")) {
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+        int rnum = Integer.parseInt(request.getParameter("rnum"));
+
+        // 게시글 정보 설정
+        boardDTO.setBnum(bnum);
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO board = boardDAO.selectOne(boardDTO);
+        request.setAttribute("board", board);
+
+        // 수정할 댓글 정보 가져오기
+        replyDTO.setBnum(bnum);
+        replyDTO.setRnum(rnum);
+
+        // 댓글 목록 가져오기
+        ArrayList<ReplyDTO> replyList = replyDAO.selectAll(replyDTO);
+        request.setAttribute("replyList", replyList);
+
+        // 수정할 댓글 번호 설정
+        request.setAttribute("editRnum", rnum);
 
         pageContext.forward("view.jsp");
     }
