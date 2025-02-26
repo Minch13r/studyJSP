@@ -105,7 +105,7 @@
         boardDAO.update(boardDTO);
         boardDTO.setCondition("SELECTONE");
         BoardDTO result = boardDAO.selectOne(boardDTO);
-        
+
         request.setAttribute("board", result);
         pageContext.forward("view.jsp");
     }
@@ -221,6 +221,4 @@
         request.setAttribute("boardList", boardList);
         pageContext.forward("main.jsp");
     }
-
-
 %>
