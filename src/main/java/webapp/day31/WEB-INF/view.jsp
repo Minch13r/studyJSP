@@ -13,6 +13,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
+
+<script type="text/javascript">
+    // 게시글 삭제
+    function deleteBoard(bnum) {
+        console.log("게시글 삭제 호출");
+
+        var flag = confirm("정말 삭제하시겠습니까?");
+        if(flag) {
+            location.href = 'controller.jsp?action=DELETE&bnum=' + bnum;
+        }
+    }
+
+    // 댓글 삭제
+    function deleteReply(rnum, bnum) {
+        console.log("댓글 삭제 호출");
+
+        var flag = confirm("댓글을 삭제하시겠습니까?");
+        if(flag) {
+            location.href = 'controller.jsp?action=DELETEREPLY&rnum=' + rnum + '&bnum=' + bnum;
+        }
+    }
+</script>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -70,7 +93,7 @@
                                 수정하기
                             </button>
                             <button type="button" class="btn btn-danger flex-grow-1"
-                                    onclick="if(confirm('정말 삭제하시겠습니까?')) location.href='controller.jsp?action=DELETE&bnum=<%= board.getBnum() %>'">
+                                    onclick="deleteBoard(<%= board.getBnum() %>)">
                                 삭제하기
                             </button>
                         </div>
@@ -117,7 +140,6 @@
                                     </div>
 
                                     <% if(editRnum != null && editRnum.equals(reply.getRnum())) { %>
-                                    <!-- 수정 폼 -->
                                     <form action="controller.jsp" method="post">
                                         <input type="hidden" name="action" value="EDITREPLY">
                                         <input type="hidden" name="bnum" value="<%= board.getBnum() %>">
@@ -141,7 +163,7 @@
                                             수정
                                         </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger"
-                                                onclick="if(confirm('댓글을 삭제하시겠습니까?')) location.href='controller.jsp?action=DELETEREPLY&rnum=<%= reply.getRnum() %>&bnum=<%= board.getBnum() %>'">
+                                                onclick="deleteReply(<%= reply.getRnum() %>, <%= board.getBnum() %>)">
                                             삭제
                                         </button>
                                     </div>

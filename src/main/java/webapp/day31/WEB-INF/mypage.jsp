@@ -26,7 +26,19 @@
     </style>
 </head>
 <body class="bg-light">
-<!-- 네비게이션 바 추가 -->
+
+<script type="text/javascript">
+    function confirmDelete() {
+        console.log("회원탈퇴 확인 호출");
+
+        var flag = confirm("정말 탈퇴하시겠습니까?");
+        if(flag) {
+            location.href = "controller.jsp?action=DELETEID";
+        }
+        return false;
+    }
+</script>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
         <div class="navbar-nav w-100 justify-content-center">
@@ -72,14 +84,15 @@
             <div class="d-flex justify-content-end mt-4">
                 <a href="main.jsp" class="btn btn-secondary me-2">메인으로</a>
                 <a href="updatename.jsp" class="btn btn-primary me-2">이름변경</a>
-                <a href="controller.jsp?action=DELETEID"
+                <a href="javascript:void(0);"
                    class="btn btn-danger"
-                   onclick="return confirm('정말 탈퇴하시겠습니까?');">회원탈퇴</a>
+                   onclick="confirmDelete();">회원탈퇴</a>
             </div>
         </form>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
