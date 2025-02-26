@@ -37,14 +37,21 @@
             response.sendRedirect("main.jsp");
         }
         else{
-            out.println("<script>alert('로그인 실패!');history.go(-1);</script>");
+            //out.println("<script>alert('로그인 실패!');history.go(-1);</script>");
+            request.setAttribute("msg", "로그인 실패!");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
     else if(action.equals("LOGOUT")){
         // session.setAttribute("userName", null);
         session.removeAttribute("userName");
         // session.invalidate();
-        out.println("<script>alert('로그아웃 성공!');location.href='main.jsp';</script>");
+        //out.println("<script>alert('로그아웃 성공!');location.href='main.jsp';</script>");
+        request.setAttribute("msg", "로그아웃 성공!");
+        request.setAttribute("flag", true);
+        request.setAttribute("url", "main.jsp");
+        pageContext.forward("alert.jsp");
     }
 
     else if(action.equals("JOIN")){
@@ -52,10 +59,17 @@
         boolean result = memberDAO.insert(memberDTO);
 
         if(result){
-            out.println("<script>alert('회원가입이 완료되었습니다.');location.href='main.jsp';</script>");
+            //out.println("<script>alert('회원가입이 완료되었습니다.');location.href='main.jsp';</script>");
+            request.setAttribute("msg", "회원가입이 완료되었습니다.");
+            request.setAttribute("flag", true);
+            request.setAttribute("url", "main.jsp");
+            pageContext.forward("alert.jsp");
         }
         else {
-            out.println("<script>alert('회원가입에 실패했습니다.');history.go(-1);</script>");
+            //out.println("<script>alert('회원가입에 실패했습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "회원가입에 실패했습니다.!");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -69,11 +83,18 @@
         if(result){
             // 성공시
             session.setAttribute("userName", memberDTO.getName());
-            out.println("<script>alert('이름이 성공적으로 변경되었습니다.');location.href='controller.jsp?action=MYPAGE';</script>");
+            //out.println("<script>alert('이름이 성공적으로 변경되었습니다.');location.href='controller.jsp?action=MYPAGE';</script>");
+            request.setAttribute("msg", "이름이 성공적으로 변경되었습니다.");
+            request.setAttribute("flag", true);
+            request.setAttribute("url", "controller.jsp?action=MYPAGE");
+            pageContext.forward("alert.jsp");
         }
         else{
             // 실패 시
-            out.println("<script>alert('이름 변경에 실패했습니다.');history.go(-1);</script>");
+            //out.println("<script>alert('이름 변경에 실패했습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "이름 변경에 실패했습니다.");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -85,10 +106,17 @@
 
         if(result){
             session.invalidate();  // 모든 세션 초기화
-            out.println("<script>alert('회원탈퇴가 완료되었습니다.');location.href='main.jsp';</script>");
+            //out.println("<script>alert('회원탈퇴가 완료되었습니다.');location.href='main.jsp';</script>");
+            request.setAttribute("msg", "회원탈퇴가 완료되었습니다.");
+            request.setAttribute("flag", true);
+            request.setAttribute("url", "main.jsp");
+            pageContext.forward("alert.jsp");
         }
         else {
-            out.println("<script>alert('회원탈퇴에 실패했습니다.');history.go(-1);</script>");
+            //out.println("<script>alert('회원탈퇴에 실패했습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "회원탈퇴에 실패했습니다.'");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -138,12 +166,22 @@
             boolean result = boardDAO.delete(boardDTO);
 
             if(result) {
-                out.println("<script>alert('게시글이 성공적으로 삭제되었습니다.');location.href='main.jsp';</script>");
+                //out.println("<script>alert('게시글이 성공적으로 삭제되었습니다.');location.href='main.jsp';</script>");
+                request.setAttribute("msg", "게시글이 성공적으로 삭제되었습니다.");
+                request.setAttribute("flag", true);
+                request.setAttribute("url", "main.jsp");
+                pageContext.forward("alert.jsp");
             } else {
-                out.println("<script>alert('게시글 삭제에 실패했습니다.');history.go(-1);</script>");
+                //out.println("<script>alert('게시글 삭제에 실패했습니다.');history.go(-1);</script>");
+                request.setAttribute("msg", "게시글 삭제에 실패했습니다.");
+                request.setAttribute("flag", false);
+                pageContext.forward("alert.jsp");
             }
         } else {
             out.println("<script>alert('삭제 권한이 없습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "삭제 권한이 없습니다.");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -158,10 +196,17 @@
         boolean result = boardDAO.insert(boardDTO);
 
         if(result){
-            out.println("<script>alert('게시글이 성공적으로 등록되었습니다.');location.href='main.jsp';</script>");
+            //out.println("<script>alert('게시글이 성공적으로 등록되었습니다.');location.href='main.jsp';</script>");
+            request.setAttribute("msg", "게시글이 성공적으로 등록되었습니다.");
+            request.setAttribute("flag", true);
+            request.setAttribute("url", "main.jsp");
+            pageContext.forward("alert.jsp");
         }
         else{
-            out.println("<script>alert('게시글 등록에 실패했습니다.');history.go(-1);</script>");
+            //out.println("<script>alert('게시글 등록에 실패했습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "게시글 등록에 실패했습니다.");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -178,6 +223,9 @@
             pageContext.forward("editform.jsp");
         } else {
             out.println("<script>alert('수정 권한이 없습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "수정 권한이 없습니다.");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -205,9 +253,16 @@
             boolean result = boardDAO.update(boardDTO);
 
             if(result) {
-                out.println("<script>alert('게시글이 성공적으로 수정되었습니다.');location.href='controller.jsp?action=UPDATECNT&bnum=" + bnum + "';</script>");
+                //out.println("<script>alert('게시글이 성공적으로 수정되었습니다.');location.href='controller.jsp?action=UPDATECNT&bnum=" + bnum + "';</script>");
+                request.setAttribute("msg", "게시글이 성공적으로 수정되었습니다.");
+                request.setAttribute("flag", true);
+                request.setAttribute("url", "controller.jsp?action=UPDATECNT&bnum=" + bnum);
+                pageContext.forward("alert.jsp");
             } else {
-                out.println("<script>alert('게시글 수정에 실패했습니다.');history.go(-1);</script>");
+                //out.println("<script>alert('게시글 수정에 실패했습니다.');history.go(-1);</script>");
+                request.setAttribute("msg", "게시글 수정에 실패했습니다.");
+                request.setAttribute("flag", false);
+                pageContext.forward("alert.jsp");
             }
         } else {
             out.println("<script>alert('수정 권한이 없습니다.');history.go(-1);</script>");
@@ -219,7 +274,7 @@
         String writer = (String)session.getAttribute("mid");
         int bnum = Integer.parseInt(request.getParameter("bnum"));
 
-        // 디버깅 로그 추가
+        // 디버깅 로그
         System.out.println("댓글 등록 시도 - 내용: " + content + ", 작성자: " + writer + ", 게시글번호: " + bnum);
 
         replyDTO.setContent(content);
@@ -233,7 +288,10 @@
             response.sendRedirect("controller.jsp?action=SELECTONE&bnum=" + bnum);
         }
         else{
-            out.println("<script>alert('댓글 등록에 실패했습니다.');history.go(-1);</script>");
+            //out.println("<script>alert('댓글 등록에 실패했습니다.');history.go(-1);</script>");
+            request.setAttribute("msg", "댓글 등록에 실패했습니다.");
+            request.setAttribute("flag", false);
+            pageContext.forward("alert.jsp");
         }
     }
 
@@ -267,6 +325,30 @@
         request.setAttribute("board", board);
         replyDTO.setBnum(bnum);
 
+        ArrayList<ReplyDTO> replyList = replyDAO.selectAll(replyDTO);
+        request.setAttribute("replyList", replyList);
+
+        pageContext.forward("view.jsp");
+    }
+
+    else if(action.equals("DELETEREPLY")){
+        int bnum = Integer.parseInt(request.getParameter("bnum"));
+        int rnum = Integer.parseInt(request.getParameter("rnum")); // 삭제할 댓글 번호도 필요합니다
+
+        // 게시글 정보 설정
+        boardDTO.setBnum(bnum);
+        boardDTO.setCondition("SELECTONE");
+        BoardDTO board = boardDAO.selectOne(boardDTO);
+        request.setAttribute("board", board);
+
+        // 삭제할 댓글 정보 설정
+        replyDTO.setBnum(bnum);
+        replyDTO.setRnum(rnum);
+
+        // 댓글 삭제 실행
+        boolean flag = replyDAO.delete(replyDTO);
+
+        // 삭제 후 해당 게시글의 댓글 목록을 다시 가져옴
         ArrayList<ReplyDTO> replyList = replyDAO.selectAll(replyDTO);
         request.setAttribute("replyList", replyList);
 
