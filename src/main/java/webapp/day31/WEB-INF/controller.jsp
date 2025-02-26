@@ -371,9 +371,7 @@
         // 게시글 상세 페이지 이동
         response.sendRedirect("controller.jsp?action=SELECTONE&bnum=" + bnum);
     }
-
-
-
+    
     else if (action.equals("EDITREPLYFORM")) {
         int bnum = Integer.parseInt(request.getParameter("bnum"));
         int rnum = Integer.parseInt(request.getParameter("rnum"));
