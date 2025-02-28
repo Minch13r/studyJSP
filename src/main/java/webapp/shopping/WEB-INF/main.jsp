@@ -3,32 +3,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>메인페이지</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script>
-function sort() {
-    // 선택된 정렬 조건
-    var condition = $('#sortList').val();
-    
-    // 폼 데이터 직렬화 (필요한 경우, 필요한 값만 직렬화)
-    var formData = $('#sortForm').serialize();  
+    <meta charset="UTF-8">
+    <title>메인페이지</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        function sort() {
+            // 선택된 정렬 조건
+            var condition = $('#sortList').val();
 
-    // Ajax 비동기 요청
-    $.ajax({
-        url: 'sortListServlet',  // 서블릿 URL
-        type: 'GET',
-        data: formData,  // 폼 데이터 전송
-        success: function(response) {
-            // 상품 목록을 동적으로 갱신
-            $('#productList').html(response);
-        },
-        error: function(xhr, status, error) {
-            alert("오류 발생: " + error);
+            // 폼 데이터 직렬화 (필요한 경우, 필요한 값만 직렬화)
+            var formData = $('#sortForm').serialize();
+
+            // Ajax 비동기 요청
+            $.ajax({
+                url: 'sortListServlet',  // 서블릿 URL
+                type: 'GET',
+                data: formData,  // 폼 데이터 전송
+                success: function(response) {
+                    // 상품 목록을 동적으로 갱신
+                    $('#productList').html(response);
+                },
+                error: function(xhr, status, error) {
+                    alert("오류 발생: " + error);
+                }
+            });
         }
-    });
-}
-</script>
+    </script>
 </head>
 <body>
 
@@ -36,20 +36,20 @@ function sort() {
 <%--로그아웃 상태일 떄 --%>
 <div id="logout">
     <form action="controller.jsp" method="POST">
-    <input type="hidden" name="action" value="LOGIN">
-    <table border="1">
-        <tr>
-            <td>아이디</td>
-            <td><input type="text" name="m_id" required></td>
-        </tr>
-        <tr>
-            <td>비밀번호</td>
-            <td><input type="password" name="m_pw" required></td>
-        </tr>
-        <tr>
-            <td colspan="2" align="right"><input type="submit" value="로그인">&nbsp;<a href="controller.jsp?action=REGPAGE" >회원가입</a></td>
-        </tr>
-    </table>
+        <input type="hidden" name="action" value="LOGIN">
+        <table border="1">
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" name="m_id" required></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" name="m_pw" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="로그인">&nbsp;<a href="controller.jsp?action=REGPAGE" >회원가입</a></td>
+            </tr>
+        </table>
     </form>
 </div>
 
@@ -66,7 +66,7 @@ function sort() {
             <td>${userName} 님 환영합니다</td>
         </tr>
         <tr>
-            <td><a href="controller.jsp?action=CARTPAGE">내 장바구니</a></td>
+            <td><a href="controller.jsp?action=SHOPPINGCART">내 장바구니</a></td>
         </tr>
         <tr>
             <td><a href="controller.jsp?action=LIKEPAGE">좋아요 목록</a></td>
@@ -78,7 +78,7 @@ function sort() {
         <%} %>
         <tr>
             <td><a href="controller.jsp?action=LOGOUT">로그아웃</a></td>
-        </tr>  
+        </tr>
     </table>
 </div>
 <% } %>
@@ -99,21 +99,21 @@ function sort() {
         <%
             if(request.getAttribute("productDatas") == null) {
         %>
-            <tr>
-                <td colspan="5">상품이 없습니다!</td>
-            </tr>
+        <tr>
+            <td colspan="5">상품이 없습니다!</td>
+        </tr>
         <%
-            } else {
-                for(ProductDTO data : (ArrayList<ProductDTO>)request.getAttribute("productDatas")) {
+        } else {
+            for(ProductDTO data : (ArrayList<ProductDTO>)request.getAttribute("productDatas")) {
         %>
-            <tr>
-                <td><%=data.getP_num() %></td>
-                <td><a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=<%=data.getP_num() %>"><%=data.getP_name() %></a></td>
-                <td><%=data.getP_price()%></td>
-                <td><%=data.getP_stock() %></td>
-                <td><%=data.getP_regdate() %></td>
-                <td><%=data.getLikes() %></td>
-            </tr>
+        <tr>
+            <td><%=data.getP_num() %></td>
+            <td><a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=<%=data.getP_num() %>"><%=data.getP_name() %></a></td>
+            <td><%=data.getP_price()%></td>
+            <td><%=data.getP_stock() %></td>
+            <td><%=data.getP_regdate() %></td>
+            <td><%=data.getLikes() %></td>
+        </tr>
         <%
                 }
             }
@@ -134,3 +134,4 @@ function sort() {
 
 </body>
 </html>
+

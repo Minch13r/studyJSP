@@ -58,15 +58,15 @@
                     <div class="invalid-feedback" id="phoneError"></div>
                 </td>
             </tr>
-			<tr>
-	            <td colspan="2" class="text-end">
-	                <button type="button" class="btn btn-secondary" onclick="location.href='controller.jsp?action=MAINPAGE'">
-	                    취소
-	                </button>
-	                <input type="hidden" name="action" value="JOIN">
-	                <!-- <button type="button" class="btn btn-primary" onclick="SignUp('signup')"> -->
-	                <input type="submit" class="btn btn-primary" onclick="SignUp('signup')" value="회원가입">
-	            </td>
+            <tr>
+                <td colspan="2" class="text-end">
+                    <button type="button" class="btn btn-secondary" onclick="location.href='controller.jsp?action=MAINPAGE'">
+                        취소
+                    </button>
+                    <input type="hidden" name="action" value="JOIN">
+                    <!-- <button type="button" class="btn btn-primary" onclick="SignUp('signup')"> -->
+                    <input type="submit" class="btn btn-primary" onclick="SignUp('signup')" value="회원가입">
+                </td>
             </tr>
         </table>
     </form>
