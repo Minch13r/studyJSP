@@ -66,7 +66,6 @@
 	                <input type="hidden" name="action" value="JOIN">
 	                <!-- <button type="button" class="btn btn-primary" onclick="SignUp('signup')"> -->
 	                <input type="submit" class="btn btn-primary" onclick="SignUp('signup')" value="회원가입">
-	                <!-- </button> -->
 	            </td>
             </tr>
         </table>
