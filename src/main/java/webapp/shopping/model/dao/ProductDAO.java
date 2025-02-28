@@ -9,12 +9,27 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 
-// 아직 DB연결 안됨 
-
 public class ProductDAO {
-    final String SELECTALL = "SELECT * FROM PRODUCT ORDER BY PRODUCT_NUM DESC"; // 상품 전체 목록 (상품번호 내림차순)
-    final String SELECTALL_SEARCH_HIGH_PRICE = "SELECT * FROM PRODUCT ORDER BY PRODUCT_PRICE DESC"; // 가격 높은 순 정렬
-    final String SELECTALL_SEARCH_LOW_PRICE = "SELECT * FROM PRODUCT ORDER BY PRODUCT_PRICE ASC"; // 가격 낮은 순 정렬
+    // 전체 상품 목록 (상품번호 내림차순) , 좋아요 개수 포함 추가
+    final String SELECTALL = "SELECT P.PRODUCT_NUM, P.PRODUCT_NAME, P.PRODUCT_DESCRIPTION, P.PRODUCT_PRICE, P.PRODUCT_STOCK, P.PRODUCT_REGDATE, COUNT(L.LIKE_NUM) AS `좋아요 개수` " +
+            "FROM PRODUCT P " +
+            "LEFT JOIN LIKES L ON P.PRODUCT_NUM = L.PRODUCT_NUM " +
+            "GROUP BY P.PRODUCT_NUM " +
+            "ORDER BY P.PRODUCT_NUM DESC";
+
+    //가격 높은 순 정렬 , 좋아요 개수 포함 추개
+    final String SELECTALL_SEARCH_HIGH_PRICE = "SELECT P.PRODUCT_NUM, P.PRODUCT_NAME, P.PRODUCT_DESCRIPTION, P.PRODUCT_PRICE, P.PRODUCT_STOCK, P.PRODUCT_REGDATE, COUNT(L.LIKE_NUM) AS `좋아요 개수` " +
+            "FROM PRODUCT P " +
+            "LEFT JOIN LIKES L ON P.PRODUCT_NUM = L.PRODUCT_NUM " +
+            "GROUP BY P.PRODUCT_NUM " +
+            "ORDER BY P.PRODUCT_PRICE DESC";
+
+    //가격 낮은 순 정렬 , 좋아요 개수 포함 추가
+    final String SELECTALL_SEARCH_LOW_PRICE = "SELECT P.PRODUCT_NUM, P.PRODUCT_NAME, P.PRODUCT_DESCRIPTION, P.PRODUCT_PRICE, P.PRODUCT_STOCK, P.PRODUCT_REGDATE, COUNT(L.LIKE_NUM) AS `좋아요 개수` " +
+            "FROM PRODUCT P " +
+            "LEFT JOIN LIKES L ON P.PRODUCT_NUM = L.PRODUCT_NUM " +
+            "GROUP BY P.PRODUCT_NUM " +
+            "ORDER BY P.PRODUCT_PRICE ASC";
     // 회원이 좋아요한 상품 조회
     final String SELECTALL_LIKED_PRODUCTS_BY_MEMBER = "SELECT P.* FROM PRODUCT P INNER JOIN LIKES L ON L.PRODUCT_NUM = P.PRODUCT_NUM INNER JOIN MEMBER M ON M.MEMBER_ID = L.MEMBER_ID WHERE M.MEMBER_ID = ? ORDER BY P.PRODUCT_NUM ASC;";
     // 상품별 좋아요 순위
@@ -49,7 +64,6 @@ public class ProductDAO {
             // 인기순 정렬
             else if (productDTO.getCondition().equals("SELECTALL_HEART_LANKING")) {
                 pstmt = conn.prepareStatement(SELECTALL_HEART_LANKING);
-                ResultSet rs = pstmt.executeQuery();
             }
 
             // 회원이 좋아요한 상품 조회
@@ -68,7 +82,7 @@ public class ProductDAO {
                 data.setP_price(rs.getInt("PRODUCT_PRICE")); // 상품 가격
                 data.setP_stock(rs.getInt("PRODUCT_STOCK")); // 상품 재고
                 data.setP_regdate(rs.getDate("PRODUCT_REGDATE")); // 등록 날짜
-                if (productDTO.getCondition().equals("SELECTALL_HEART_LANKING")) {
+                if (!productDTO.getCondition().equals("SELECTALL_LIKED_PRODUCTS_BY_MEMBER")) {
                     data.setLikes(rs.getInt("좋아요 개수"));
                 }
 
@@ -120,10 +134,9 @@ public class ProductDAO {
 
             pstmt = conn.prepareStatement(INSERT);
             pstmt.setString(1, productDTO.getP_name());
-            pstmt.setInt(2, productDTO.getP_price());
-            pstmt.setInt(3, productDTO.getP_stock());
-            pstmt.setString(4, productDTO.getP_description());
-
+            pstmt.setString(2, productDTO.getP_description());
+            pstmt.setInt(3, productDTO.getP_price());
+            pstmt.setInt(4, productDTO.getP_stock());
             int result = pstmt.executeUpdate();
             if (result <= 0) {
                 return false;
@@ -146,4 +159,5 @@ public class ProductDAO {
         return false;
 
     }
+
 }

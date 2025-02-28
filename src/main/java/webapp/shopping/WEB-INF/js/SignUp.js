@@ -53,6 +53,7 @@ function SignUp(action) {
 
         // 이메일 형식 검사
         const emailRegex = /^[a-zA-Z0-9_-]+$/;
+
         if (!emailRegex.test(emailId)) {
             alert('올바른 이메일 형식이 아닙니다.');
             return;

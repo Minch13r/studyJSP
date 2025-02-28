@@ -2,7 +2,7 @@ package webapp.shopping.model.dto;
 
 import java.util.Date;
 
-public class LikeDTO {
+public class LikesDTO {
     // 좋아요 번호
     private String l_num; // pk
 

@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class MemberDAO {
-    final String SELECTONE = "SELECT * FROM MEMBER WHERE MEMBER_ID = ? AND PASSWORD = ?";
-    final String INSERT = "INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_MAIL, MEMBER_PHONE, MEMBER_ROLE) VALUES (?, ?, ?, ?, ?, ?)";
+    final String SELECTONE = "SELECT * FROM MEMBER WHERE MEMBER_ID = ? AND MEMBER_PASSWORD = ?";
+    final String INSERT = "INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_MAIL, MEMBER_PHONE) VALUES (?, ?, ?, ?, ?)";
 
     Connection conn = null;
     PreparedStatement pstmt = null;
@@ -62,9 +62,9 @@ public class MemberDAO {
             pstmt.setString(3, memberDTO.getM_name());
             pstmt.setString(4, memberDTO.getM_mail());
             pstmt.setString(5, memberDTO.getM_phone());
-            pstmt.setString(6, memberDTO.getM_role());
-            pstmt.executeUpdate();
+            //pstmt.executeUpdate();
             int result = pstmt.executeUpdate();
+            System.out.println("insert 로그:"+result);
             return result > 0;
         } catch (Exception e){
             e.printStackTrace();

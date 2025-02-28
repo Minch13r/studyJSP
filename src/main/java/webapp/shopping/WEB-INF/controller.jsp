@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="webapp.shopping.model.dto.MemberDTO, webapp.shopping.model.dto.ProductDTO, webapp.shopping.model.dto.LikeDTO, java.util.ArrayList" %>
+    pageEncoding="UTF-8" import="webapp.shopping.model.dto.MemberDTO, webapp.shopping.model.dto.ProductDTO, webapp.shopping.model.dto.LikesDTO, java.util.ArrayList" %>
 <jsp:useBean id="memberDAO" class="webapp.shopping.model.dao.MemberDAO" />
 <jsp:useBean id="memberDTO" class="webapp.shopping.model.dto.MemberDTO" />
 <jsp:setProperty property="*" name="memberDTO" />
 <jsp:useBean id="productDAO" class="webapp.shopping.model.dao.ProductDAO" />
 <jsp:useBean id="productDTO" class="webapp.shopping.model.dto.ProductDTO" />
 <jsp:setProperty property="*" name="productDTO" />
-<jsp:useBean id="likesDAO" class="webapp.shopping.model.dao.LikeDAO" />
-<jsp:useBean id="likesDTO" class="webapp.shopping.model.dto.LikeDTO" />
+<jsp:useBean id="likesDAO" class="webapp.shopping.model.dao.LikesDAO" />
+<jsp:useBean id="likesDTO" class="webapp.shopping.model.dto.LikesDTO" />
 <jsp:setProperty property="*" name="likesDTO" />
 
 <%
