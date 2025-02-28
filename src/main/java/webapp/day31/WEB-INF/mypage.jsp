@@ -7,34 +7,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>마이 페이지</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .profile-section {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            border-radius: 10px;
-        }
-        .page-title {
-            color: #2c3e50;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-    </style>
+    <link href="css/mypage.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-
 <script type="text/javascript">
     function confirmDelete() {
         console.log("회원탈퇴 확인 호출");
-
-        var flag = confirm("정말 탈퇴하시겠습니까?");
         if(flag) {
             location.href = "controller.jsp?action=DELETEID";
         }
+
+        var flag = confirm("정말 탈퇴하시겠습니까?");
         return false;
     }
 </script>
