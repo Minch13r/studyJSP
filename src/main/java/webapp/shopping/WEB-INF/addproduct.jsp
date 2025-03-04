@@ -6,6 +6,8 @@
 </head>
 <body>
 <h1>상품 등록 폼</h1>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <form action="controller.jsp" method="POST">
     <input type="hidden" name="action" value="ADDPRODUCT">
     <table border="1">
