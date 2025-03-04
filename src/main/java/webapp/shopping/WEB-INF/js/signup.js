@@ -32,15 +32,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 아이디 입력 필드에 변경 이벤트 리스너 추가
-    const idInput = document.getElementById('m_id');
-    if (idInput) {
-        idInput.addEventListener('input', function() {
-            // 아이디가 변경되면 중복 확인 상태 초기화
-            document.getElementById('idChecked').value = 'N';
-        });
-    }
-
     // 폼 제출 이벤트 리스너 추가
     const signUpForm = document.getElementById('signupform');
     if (signUpForm) {

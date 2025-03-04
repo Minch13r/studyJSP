@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 public class MemberDAO {
-    final String SELECTONE = "SELECT * FROM MEMBER WHERE MEMBER_ID = ? AND MEMBER_PASSWORD = ?";
+    final String SELECTONE = "SELECT MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_MAIL, MEMBER_PHONE, MEMBER_ROLE, MEMBER_REGDATE FROM MEMBER WHERE MEMBER_ID = ? AND MEMBER_PASSWORD = ?";
+    final String SELECTONE_CHECK ="SELECT MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_MAIL, MEMBER_PHONE, MEMBER_ROLE, MEMBER_REGDATE FROM MEMBER WHERE MEMBER_ID = ?";
     final String INSERT = "INSERT INTO MEMBER (MEMBER_ID, MEMBER_PASSWORD, MEMBER_NAME, MEMBER_MAIL, MEMBER_PHONE) VALUES (?, ?, ?, ?, ?)";
 
     Connection conn = null;
@@ -28,11 +29,20 @@ public class MemberDAO {
         MemberDTO data = null;
         try {
             conn = JDBCUtil.connect();
-            pstmt = conn.prepareStatement(SELECTONE);
-            pstmt.setString(1, memberDTO.getM_id());
-            pstmt.setString(2, memberDTO.getM_pw());
-            rs = pstmt.executeQuery();
 
+            // 컨디션에 따라 다른 쿼리 사용
+            if (memberDTO.getCondition() != null && memberDTO.getCondition().equals("SELECTONE_CHECK")) {
+                // 아이디 중복 체크용 쿼리
+                pstmt = conn.prepareStatement(SELECTONE_CHECK);
+                pstmt.setString(1, memberDTO.getM_id());
+            }
+            else if(memberDTO.getCondition() != null && memberDTO.getCondition().equals("SELECTONE")) {
+                // 기본 로그인 쿼리
+                pstmt = conn.prepareStatement(SELECTONE);
+                pstmt.setString(1, memberDTO.getM_id());
+                pstmt.setString(2, memberDTO.getM_pw());
+            }
+            rs = pstmt.executeQuery();
             if(rs.next()) {
                 data = new MemberDTO();
                 data.setM_id(rs.getString("MEMBER_ID"));

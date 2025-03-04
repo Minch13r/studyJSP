@@ -39,7 +39,7 @@
                 <td>
                     <div class="d-flex align-items-center">
                         <input type="text" name="m_mail" class="form-control me-2" required
-                               placeholder="이메일을 입력하세요" style="width: 60%;" pattern="[a-zA-Z0-9_-]+">
+                               placeholder="이메일을 입력하세요" style="width: 60%;" pattern="[a-zA-Z0-9._-]+">
                         <span class="mx-2">@</span>
                         <select name="emailDomain" class="form-control" style="width: 35%;">
                             <option value="naver.com">naver.com</option>

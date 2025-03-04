@@ -63,22 +63,35 @@
 	}
 	else if (action.equals("JOIN")) {
 		System.out.println("JOIN 로그 가져온 ID["+memberDTO.getM_id()+"]");
+
+		// 아이디 중복 체크
+		MemberDTO checkMember = new MemberDTO();
+		checkMember.setM_id(memberDTO.getM_id());
+		checkMember.setCondition("SELECTONE_CHECK");
+		MemberDTO result = memberDAO.selectOne(checkMember);
+
+		if (result != null) {
+			// 아이디가 이미 존재함
+			request.setAttribute("msg", "이미 사용 중인 아이디입니다!");
+			request.setAttribute("flag", false);
+			pageContext.forward("alert.jsp");
+			return;
+		}
+
+		// 중복이 없으면 회원가입 진행
 		if (memberDAO.insert(memberDTO)) {
-			// url, flag, msg 요청단위 저장
-			// alert.jsp에 url, ture, msg 보내기
 			request.setAttribute("msg", "회원가입 성공!");
 			request.setAttribute("flag", true);
 			request.setAttribute("url", "controller.jsp?action=MAINPAGE");
 			pageContext.forward("alert.jsp");
 		}
 		else {
-			// url, flag, msg 요청단위 저장
-			// alert.jsp에 url, false, msg 보내기
 			request.setAttribute("msg", "회원가입 실패!");
 			request.setAttribute("flag", false);
 			pageContext.forward("alert.jsp");
 		}
 	}
+
 	else if (action.equals("ADDPRODUCTPAGE")) {
 		// 상품추가는 관리자인 경우에만 가능
 		if(!session.getAttribute("role").equals("admin")) {
@@ -215,7 +228,6 @@
 		request.setAttribute("productDatas", productDatas);
 		pageContext.forward("main.jsp");
 	}
-
 %>
 </body>
 </html>
