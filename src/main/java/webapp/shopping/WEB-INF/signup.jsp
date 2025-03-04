@@ -6,12 +6,12 @@
     <meta charset="UTF-8">
     <title>회원가입</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/SignUpStyle.css" rel="stylesheet">
+    <link href="css/signupstyle.css" rel="stylesheet">
 </head>
 <body>
 <div id="box" class="container mt-5">
     <h1 class="text-center mb-4">회원가입</h1>
-    <form id="SignUpForm" action="controller.jsp" method="POST">
+    <form id="signupform" action="controller.jsp" method="POST">
         <table class="table table-bordered">
             <tr>
                 <td>아이디</td>
@@ -72,6 +72,6 @@
     </form>
 </div>
 
-<script src="js/SignUp.js"></script>
+<script src="js/signup.js"></script>
 </body>
 </html>
