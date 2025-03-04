@@ -16,7 +16,7 @@ public class LikesDAO {
     PreparedStatement pstmt = null;
 
     // X
-    public ArrayList<LikesDTO> selectAll() {
+    public ArrayList<LikesDTO> selectAll(LikesDTO likeDTO) {
 
         return null;
     }

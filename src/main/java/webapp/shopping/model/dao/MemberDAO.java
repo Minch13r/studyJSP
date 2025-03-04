@@ -19,7 +19,7 @@ public class MemberDAO {
     ResultSet rs = null;
 
     // 사용 X
-    public ArrayList<MemberDTO> selectAll() {
+    public ArrayList<MemberDTO> selectAll(MemberDTO memberDTO) {
         return null;
     }
 
