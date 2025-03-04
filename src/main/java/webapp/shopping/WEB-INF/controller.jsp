@@ -16,6 +16,7 @@
 
 	if (action.equals("LOGIN")) {
 		// 컨디션"로그인"
+		memberDTO.setCondition("SELECTONE");
 		memberDTO = memberDAO.selectOne(memberDTO);
 		if (memberDTO != null) {
 			//cart 만들기

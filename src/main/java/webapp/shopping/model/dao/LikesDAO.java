@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class LikesDAO {
     final String SELECTONE = "SELECT * FROM LIKES WHERE MEMBER_ID = ? AND PRODUCT_NUM = ?;";
     final String INSERT = "INSERT INTO LIKES (MEMBER_ID, PRODUCT_NUM) VALUES (?,?)";
+    final String DELETE = "DELETE FROM LIKES WHERE MEMBER_ID = ? AND PRODUCT_NUM = ?;";
     Connection conn = null;
     PreparedStatement pstmt = null;
 
@@ -67,8 +68,20 @@ public class LikesDAO {
         return false;
     }
 
-    // 사용 X
+    // 좋아요 삭제
     public boolean delete(LikesDTO likeDTO) {
-        return false;
+        try {
+            conn = JDBCUtil.connect();
+            pstmt = conn.prepareStatement(DELETE);
+            pstmt.setString(1, likeDTO.getL_m_id());
+            pstmt.setInt(2, likeDTO.getL_p_num());
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        } finally {
+            JDBCUtil.disconnect(conn, pstmt);
+        }
     }
 }
