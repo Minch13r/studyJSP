@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="webapp.shopping.model.dto.MemberDTO, webapp.shopping.model.dto.ProductDTO, webapp.shopping.model.dto.LikesDTO, java.util.ArrayList" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <jsp:useBean id="memberDAO" class="webapp.shopping.model.dao.MemberDAO" />
 <jsp:useBean id="memberDTO" class="webapp.shopping.model.dto.MemberDTO" />
 <jsp:setProperty property="*" name="memberDTO" />
