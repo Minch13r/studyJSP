@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="webapp.shopping.model.dto.MemberDTO, webapp.shopping.model.dto.ProductDTO, webapp.shopping.model.dto.LikesDTO, java.util.ArrayList" %>
+    pageEncoding="UTF-8" import="webapp.shopping.model.dto.MemberDTO, webapp.shopping.controller.action.*, webapp.shopping.controller.common.*,webapp.shopping.model.dto.ProductDTO, webapp.shopping.model.dto.LikesDTO, java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="webapp.shopping.controller.action.ShoppingCartAction" %>
 <jsp:useBean id="memberDAO" class="webapp.shopping.model.dao.MemberDAO" />
 <jsp:useBean id="memberDTO" class="webapp.shopping.model.dto.MemberDTO" />
 <jsp:setProperty property="*" name="memberDTO" />
@@ -153,69 +154,109 @@
 		request.setAttribute("flag", flag);
 		pageContext.forward("productdetailpage.jsp");
 	}
-
+//여기부터
 	else if (action.equals("SHOPPINGCART")) {
-		Map<ProductDTO, Integer> datas = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
-		int totalPrice=0;
-		for(ProductDTO key : datas.keySet()){   //장바구니 총금액
-			int cnt = datas.get(key); // 키에 해당하는 물건의 갯수
-			totalPrice+=key.getP_price()*cnt; // 갯수*물건가격
-			System.out.println("ADDCART 로그: totalPrice["+totalPrice+"]");
+//		Map<ProductDTO, Integer> datas = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
+//		int totalPrice=0;
+//		for(ProductDTO key : datas.keySet()){   //장바구니 총금액
+//			int cnt = datas.get(key); // 키에 해당하는 물건의 갯수
+//			totalPrice+=key.getP_price()*cnt; // 갯수*물건가격
+//			System.out.println("ADDCART 로그: totalPrice["+totalPrice+"]");
+//		}
+//		request.setAttribute("totalPrice", totalPrice);
+//		// 내 장바구니 목록 보내기
+//		// 어차피 세션에 들어있다
+//		pageContext.forward("shoppingcart.jsp");
+		ShoppingCartAction shoppingCartAction = new ShoppingCartAction();
+		ActionForward forward = shoppingCartAction.execute(request);
+
+		if (forward != null) {
+			if (forward.isRedirect()) {
+				response.sendRedirect(forward.getPath());
+			} else {
+				pageContext.forward(forward.getPath());
+			}
 		}
-		request.setAttribute("totalPrice", totalPrice);
-		// 내 장바구니 목록 보내기
-		// 어차피 세션에 들어있다
-		pageContext.forward("shoppingcart.jsp");
 	}
 	else if(action.equals("ADDCART")){ //장바구니 상품추가
-		System.out.println("ADDCARD 로그: productDTO.getP_num = ["+productDTO.getP_num()+"]");
-		if(session.getAttribute("userId")!=null){   //로그인했으면
-			//V에서 받은 상품 번호 가지고
-			ProductDTO product=productDAO.selectOne(productDTO);   //상품선택 메서드 호출해서 상품 한개 반환
-			System.out.println("ADDCART 로그: 상품번호["+productDTO.getP_num()+"]");
-			Map<ProductDTO, Integer> cart = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
-			// 이미 장바구니에 해당 상품이 있을 경우
-			if (cart.containsKey(product)) {
-				cart.put(product, cart.get(product) + 1);
+		// AddCartAction 클래스의 인스턴스 생성
+		AddCartAction addCartAction = new AddCartAction();
+
+		// 액션 실행 및 결과(ActionForward) 받기
+		ActionForward forward = addCartAction.execute(request);
+
+		// ActionForward 객체를 사용하여 페이지 이동 처리
+		if (forward != null) {
+			if (forward.isRedirect()) {
+				response.sendRedirect(forward.getPath());
 			} else {
-				cart.put(product, 1);
-			}
-			if(product!=null){
-				session.setAttribute("cart", cart);         // 상품 세션에 추가
-				request.setAttribute("msg", "장바구니 성공!");
-				request.setAttribute("flag", true);
-				request.setAttribute("url", "controller.jsp?action=PRODUCTDETAILPAGE&p_num="+productDTO.getP_num());
-				pageContext.forward("alert.jsp");
-			}
-			else{
-				request.setAttribute("msg", "장바구니에 담을 상품이 없어요ㅠ");
-				request.setAttribute("flag", false);
-				pageContext.forward("alert.jsp");
+				pageContext.forward(forward.getPath());
 			}
 		}
-		else{   //'로그인 후 이용해주세요' 출력하고 뒤로가기
-			request.setAttribute("msg", "로그인 후 이용해주세요!");
-			request.setAttribute("flag", false);
-			pageContext.forward("alert.jsp");
-		}
+		return; // 중요: 이후 코드 실행 방지
+//		System.out.println("ADDCARD 로그: productDTO.getP_num = ["+productDTO.getP_num()+"]");
+//		if(session.getAttribute("userId")!=null){   //로그인했으면
+//			//V에서 받은 상품 번호 가지고
+//			ProductDTO product=productDAO.selectOne(productDTO);   //상품선택 메서드 호출해서 상품 한개 반환
+//			System.out.println("ADDCART 로그: 상품번호["+productDTO.getP_num()+"]");
+//			Map<ProductDTO, Integer> cart = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
+//			// 이미 장바구니에 해당 상품이 있을 경우
+//			if (cart.containsKey(product)) {
+//				cart.put(product, cart.get(product) + 1);
+//			} else {
+//				cart.put(product, 1);
+//			}
+//			if(product!=null){
+//				session.setAttribute("cart", cart);         // 상품 세션에 추가
+//				request.setAttribute("msg", "장바구니 성공!");
+//				request.setAttribute("flag", true);
+//				request.setAttribute("url", "controller.jsp?action=PRODUCTDETAILPAGE&p_num="+productDTO.getP_num());
+//				pageContext.forward("alert.jsp");
+//			}
+//			else{
+//				request.setAttribute("msg", "장바구니에 담을 상품이 없어요ㅠ");
+//				request.setAttribute("flag", false);
+//				pageContext.forward("alert.jsp");
+//			}
+//		}
+//		else{   //'로그인 후 이용해주세요' 출력하고 뒤로가기
+//			request.setAttribute("msg", "로그인 후 이용해주세요!");
+//			request.setAttribute("flag", false);
+//			pageContext.forward("alert.jsp");
+//		}
 	}
 	else if(action.equals("DELETECART")){
-		System.out.println("DELETECART 로그 p_num ["+productDTO.getP_num()+"]");
-		ProductDTO product = productDAO.selectOne(productDTO);
-		Map<ProductDTO, Integer> cart = (HashMap<ProductDTO, Integer>) session.getAttribute("cart");
-		if(cart.containsKey(product)){
-			cart.remove(product);
-			session.setAttribute("cart", cart);
-			request.setAttribute("msg", "장바구니 삭제 성공!");
-			request.setAttribute("flag", true);
-			request.setAttribute("url", "controller.jsp?action=SHOPPINGCART");
-			pageContext.forward("alert.jsp");
+		// DeleteCartAction 클래스의 인스턴스 생성
+		DeleteCartAction deleteCartAction = new DeleteCartAction();
+
+		// 액션 실행 및 결과(ActionForward) 받기
+		ActionForward forward = deleteCartAction.execute(request);
+
+		// ActionForward 객체를 사용하여 페이지 이동 처리
+		if (forward != null) {
+			if (forward.isRedirect()) {
+				response.sendRedirect(forward.getPath());
+			} else {
+				pageContext.forward(forward.getPath());
+			}
 		}
-		else{
-			request.setAttribute("msg", "장바구니 삭제 실패ㅠ");
-			request.setAttribute("flag", false);
-			pageContext.forward("alert.jsp");
-		}
+		return; // 중요: 이후 코드 실행 방지
+//		System.out.println("DELETECART 로그 p_num ["+productDTO.getP_num()+"]");
+//		ProductDTO product = productDAO.selectOne(productDTO);
+//		Map<ProductDTO, Integer> cart = (HashMap<ProductDTO, Integer>) session.getAttribute("cart");
+//		if(cart.containsKey(product)){
+//			cart.remove(product);
+//			session.setAttribute("cart", cart);
+//			request.setAttribute("msg", "장바구니 삭제 성공!");
+//			request.setAttribute("flag", true);
+//			request.setAttribute("url", "controller.jsp?action=SHOPPINGCART");
+//			pageContext.forward("alert.jsp");
+//		}
+//		else{
+//			request.setAttribute("msg", "장바구니 삭제 실패ㅠ");
+//			request.setAttribute("flag", false);
+//			pageContext.forward("alert.jsp");
+//		}
 	}
 	else if(action.equals("LIKEPRODUCT")){   //좋아요 누르기
 		//V에서 상품번호 받아서 DTO에 넣기 - v에서 상품번호 searchKeyword로 보내줄거임
