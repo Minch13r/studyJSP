@@ -18,11 +18,12 @@
 		// 컨디션"로그인"
 		memberDTO.setCondition("SELECTONE");
 		memberDTO = memberDAO.selectOne(memberDTO);
+		System.out.println("로그인 로그: "+memberDTO);
 		if (memberDTO != null) {
 			//cart 만들기
-			ArrayList<ProductDTO> cart = (ArrayList<ProductDTO>) session.getAttribute("cart");
+			Map<ProductDTO, Integer> cart = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
 			if (cart == null) {
-				cart = new ArrayList<>();
+				cart = new HashMap<>();
 			}
 			//session에 userId, userName, role, cart 저장
 			session.setAttribute("userId", memberDTO.getM_id());
@@ -92,7 +93,6 @@
 			pageContext.forward("alert.jsp");
 		}
 	}
-
 	else if (action.equals("ADDPRODUCTPAGE")) {
 		// 상품추가는 관리자인 경우에만 가능
 		if(!session.getAttribute("role").equals("admin")) {
@@ -128,23 +128,36 @@
 	}
 	else if (action.equals("PRODUCTDETAILPAGE")) {
 		// 상품 selectOne()
+		likesDTO.setL_m_id((String) session.getAttribute("userId")); //현재 로그인 한 사람
+		likesDTO.setL_p_num(productDTO.getP_num());   //제품번호
+		boolean flag;
+		if(likesDAO.selectOne(likesDTO) != null){   //이미 좋아요 하고있으면
+			flag=false;
+		}
+		else{
+			flag=true;
+		}
 		System.out.println("PRODUCTDETAILPAGE 로그 productDTO.getP_num(): "+productDTO.getP_num());
 		productDTO = productDAO.selectOne(productDTO);
 		System.out.println("PRODUCTDETAILPAGE 로그 상품 정보: " + productDTO);
+
+
 		if (productDTO == null) {
 			System.out.println("CTRL action = PRODUCTDETAILPAGE 로그: 제품 선택 오류");
 		}
 		// 상품 요청단위 저장
 		// productdetailpage.jsp로 forward
 		request.setAttribute("productDTO", productDTO);
+		request.setAttribute("flag", flag);
 		pageContext.forward("productdetailpage.jsp");
 	}
 
 	else if (action.equals("SHOPPINGCART")) {
-		ArrayList<ProductDTO> datas=(ArrayList<ProductDTO>)session.getAttribute("cart");
+		Map<ProductDTO, Integer> datas = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
 		int totalPrice=0;
-		for(ProductDTO data:datas){	//장바구니 총금액
-			totalPrice+=data.getP_price();
+		for(ProductDTO key : datas.keySet()){   //장바구니 총금액
+			int cnt = datas.get(key); // 키에 해당하는 물건의 갯수
+			totalPrice+=key.getP_price()*cnt; // 갯수*물건가격
 			System.out.println("ADDCART 로그: totalPrice["+totalPrice+"]");
 		}
 		request.setAttribute("totalPrice", totalPrice);
@@ -154,14 +167,19 @@
 	}
 	else if(action.equals("ADDCART")){ //장바구니 상품추가
 		System.out.println("ADDCARD 로그: productDTO.getP_num = ["+productDTO.getP_num()+"]");
-		if(session.getAttribute("userId")!=null){	//로그인했으면
+		if(session.getAttribute("userId")!=null){   //로그인했으면
 			//V에서 받은 상품 번호 가지고
-			ProductDTO product=productDAO.selectOne(productDTO);	//상품선택 메서드 호출해서 상품 한개 반환
+			ProductDTO product=productDAO.selectOne(productDTO);   //상품선택 메서드 호출해서 상품 한개 반환
 			System.out.println("ADDCART 로그: 상품번호["+productDTO.getP_num()+"]");
-			ArrayList<ProductDTO> cart=(ArrayList<ProductDTO>)session.getAttribute("cart");
-			cart.add(product);
+			Map<ProductDTO, Integer> cart = (HashMap<ProductDTO,Integer>) session.getAttribute("cart");
+			// 이미 장바구니에 해당 상품이 있을 경우
+			if (cart.containsKey(product)) {
+				cart.put(product, cart.get(product) + 1);
+			} else {
+				cart.put(product, 1);
+			}
 			if(product!=null){
-				session.setAttribute("cart", cart);			// 상품 세션에 추가
+				session.setAttribute("cart", cart);         // 상품 세션에 추가
 				request.setAttribute("msg", "장바구니 성공!");
 				request.setAttribute("flag", true);
 				request.setAttribute("url", "controller.jsp?action=PRODUCTDETAILPAGE&p_num="+productDTO.getP_num());
@@ -173,13 +191,31 @@
 				pageContext.forward("alert.jsp");
 			}
 		}
-		else{	//'로그인 후 이용해주세요' 출력하고 뒤로가기
+		else{   //'로그인 후 이용해주세요' 출력하고 뒤로가기
 			request.setAttribute("msg", "로그인 후 이용해주세요!");
 			request.setAttribute("flag", false);
 			pageContext.forward("alert.jsp");
 		}
 	}
-	else if(action.equals("LIKEPRODUCT")){	//좋아요 누르기
+	else if(action.equals("DELETECART")){
+		System.out.println("DELETECART 로그 p_num ["+productDTO.getP_num()+"]");
+		ProductDTO product = productDAO.selectOne(productDTO);
+		Map<ProductDTO, Integer> cart = (HashMap<ProductDTO, Integer>) session.getAttribute("cart");
+		if(cart.containsKey(product)){
+			cart.remove(product);
+			session.setAttribute("cart", cart);
+			request.setAttribute("msg", "장바구니 삭제 성공!");
+			request.setAttribute("flag", true);
+			request.setAttribute("url", "controller.jsp?action=SHOPPINGCART");
+			pageContext.forward("alert.jsp");
+		}
+		else{
+			request.setAttribute("msg", "장바구니 삭제 실패ㅠ");
+			request.setAttribute("flag", false);
+			pageContext.forward("alert.jsp");
+		}
+	}
+	else if(action.equals("LIKEPRODUCT")){   //좋아요 누르기
 		//V에서 상품번호 받아서 DTO에 넣기 - v에서 상품번호 searchKeyword로 보내줄거임
 		String userId = (String) session.getAttribute("userId");
 		int p_num = productDTO.getP_num();
@@ -201,7 +237,7 @@
 		//true이면 '좋아요 누르셨습니다' 출력하고 상세페이지로 이동
 		//아니면 '로그인해주세요' 출력하고 뒤로가기
 	}
-	else if(action.equals("LIKEPAGE")){	// 좋아요목록 배열 보내고 좋아요목록 페이지로 이동
+	else if(action.equals("LIKEPAGE")){   // 좋아요목록 배열 보내고 좋아요목록 페이지로 이동
 		productDTO.setCondition("SELECTALL_LIKED_PRODUCTS_BY_MEMBER");
 		String userId = (String) session.getAttribute("userId");
 		System.out.println(userId);
@@ -223,8 +259,8 @@
 			productDTO.setCondition("SELECTALL");
 		}
 		ArrayList<ProductDTO> productDatas = productDAO.selectAll(productDTO);
-		for(ProductDTO d : productDatas) { // 로그
-			System.out.println(d);
+		for(ProductDTO data : productDatas) { // 로그
+			System.out.println(data);
 		}
 		request.setAttribute("productDatas", productDatas);
 		pageContext.forward("main.jsp");
