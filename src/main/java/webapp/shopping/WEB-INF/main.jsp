@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8" import="webapp.shopping.model.dto.*, java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,73 +83,75 @@
 </head>
 <body>
 
-<% if(session.getAttribute("userName") == null) {%>
-<%--로그아웃 상태일 떄 --%>
-<div id="logout" class="container mt-5">
-    <form action="controller.jsp" method="POST">
-        <input type="hidden" name="action" value="LOGIN">
-        <table class="table table-bordered">
-            <tr>
-                <td product-info-label text-center><i class="fas fa-barcode me-2"></i>아이디</td>
-                <td><input type="text" name="m_id" class="form-control" required></td>
-            </tr>
-            <tr>
-                <td product-info-label text-center><i class="fas fa-barcode me-2"></i>비밀번호</td>
-                <td><input type="password" name="m_pw" class="form-control" required></td>
-            </tr>
-            <tr>
-                <td colspan="2" align="right"><input type="submit" class="btn btn-primary"value="로그인">&nbsp;<a href="controller.jsp?action=REGPAGE" class="btn btn-success">회원가입</a></td>
-            </tr>
-        </table>
-    </form>
-</div>
+<c:choose>
+    <c:when test="${empty sessionScope.userName}">
+        <%--로그아웃 상태일 때 --%>
+        <div id="logout" class="container mt-5">
+            <form action="controller.jsp" method="POST">
+                <input type="hidden" name="action" value="LOGIN">
+                <table class="table table-bordered">
+                    <tr>
+                        <td product-info-label text-center><i class="fas fa-barcode me-2"></i>아이디</td>
+                        <td><input type="text" name="m_id" class="form-control" required></td>
+                    </tr>
+                    <tr>
+                        <td product-info-label text-center><i class="fas fa-barcode me-2"></i>비밀번호</td>
+                        <td><input type="password" name="m_pw" class="form-control" required></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right"><input type="submit" class="btn btn-primary" value="로그인">&nbsp;<a href="controller.jsp?action=REGPAGE" class="btn btn-success">회원가입</a></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <%--로그인 상태일 때 --%>
+        <div id="login" class="container mt-5">
+            <div class="card shadow border-0">
+                <div class="card-body">
+                    <c:if test="${sessionScope.role eq 'admin'}">
+                        <div class="alert alert-primary mb-3 d-flex align-items-center" role="alert">
+                            <i class="bi bi-shield-lock-fill me-2"></i>
+                            <strong>[${sessionScope.role}]</strong> 관리자 계정으로 로그인하셨습니다
+                        </div>
+                    </c:if>
 
-<% }else{ %>
-<%--로그인 상태일 떄 --%>
-<div id="login" class="container mt-5">
-    <div class="card shadow border-0">
-        <div class="card-body">
-            <%if(session.getAttribute("role").equals("admin")) {%>
-            <div class="alert alert-primary mb-3 d-flex align-items-center" role="alert">
-                <i class="bi bi-shield-lock-fill me-2"></i>
-                <strong>[${role}]</strong> 관리자 계정으로 로그인하셨습니다
-            </div>
-            <%} %>
+                    <div class="text-center mb-4">
+                        <h4 class="fw-bold">${sessionScope.userName} 님</h4>
+                        <p class="text-muted">환영합니다</p>
+                    </div>
 
-            <div class="text-center mb-4">
-                <h4 class="fw-bold">${userName} 님</h4>
-                <p class="text-muted">환영합니다</p>
-            </div>
+                    <div class="list-group list-group-flush">
+                        <a href="controller.jsp?action=SHOPPINGCART" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                            <i class="bi bi-cart me-3 text-primary"></i>
+                            <span>내 장바구니</span>
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                        </a>
+                        <a href="controller.jsp?action=LIKEPAGE" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                            <i class="bi bi-heart me-3 text-danger"></i>
+                            <span>좋아요 목록</span>
+                            <i class="bi bi-chevron-right ms-auto"></i>
+                        </a>
+                        <c:if test="${sessionScope.role eq 'admin'}">
+                            <a href="controller.jsp?action=ADDPRODUCTPAGE" class="list-group-item list-group-item-action d-flex align-items-center py-3">
+                                <i class="bi bi-plus-circle me-3 text-success"></i>
+                                <span>상품 추가</span>
+                                <i class="bi bi-chevron-right ms-auto"></i>
+                            </a>
+                        </c:if>
+                    </div>
 
-            <div class="list-group list-group-flush">
-                <a href="controller.jsp?action=SHOPPINGCART" class="list-group-item list-group-item-action d-flex align-items-center py-3">
-                    <i class="bi bi-cart me-3 text-primary"></i>
-                    <span>내 장바구니</span>
-                    <i class="bi bi-chevron-right ms-auto"></i>
-                </a>
-                <a href="controller.jsp?action=LIKEPAGE" class="list-group-item list-group-item-action d-flex align-items-center py-3">
-                    <i class="bi bi-heart me-3 text-danger"></i>
-                    <span>좋아요 목록</span>
-                    <i class="bi bi-chevron-right ms-auto"></i>
-                </a>
-                <%if(session.getAttribute("role").equals("admin")) {%>
-                <a href="controller.jsp?action=ADDPRODUCTPAGE" class="list-group-item list-group-item-action d-flex align-items-center py-3">
-                    <i class="bi bi-plus-circle me-3 text-success"></i>
-                    <span>상품 추가</span>
-                    <i class="bi bi-chevron-right ms-auto"></i>
-                </a>
-                <%} %>
-            </div>
-
-            <div class="mt-4 text-center">
-                <a href="controller.jsp?action=LOGOUT" class="btn btn-outline-danger px-4">
-                    <i class="bi bi-box-arrow-right me-2"></i>로그아웃
-                </a>
+                    <div class="mt-4 text-center">
+                        <a href="controller.jsp?action=LOGOUT" class="btn btn-outline-danger px-4">
+                            <i class="bi bi-box-arrow-right me-2"></i>로그아웃
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<% } %>
+    </c:otherwise>
+</c:choose>
 
 <br><hr><br>
 
@@ -192,44 +195,46 @@
             </tr>
             </thead>
             <tbody>
-            <%
-                if(request.getAttribute("productDatas") == null) {
-            %>
-            <tr class="text-center">
-                <td colspan="6" class="py-3 text-muted">
-                    <i class="bi bi-exclamation-circle me-2"></i>상품이 없습니다!
-                </td>
-            </tr>
-            <%
-            } else {
-                for(ProductDTO data : (ArrayList<ProductDTO>)request.getAttribute("productDatas")) {
-            %>
-            <tr class="text-center">
-                <td><%= data.getP_num() %></td>
-                <td>
-                    <a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=<%= data.getP_num() %>" class="product-link">
-                        <%= data.getP_name() %>
-                    </a>
-                </td>
-                <td class="fw-bold"><%= String.format("%,d원", data.getP_price()) %></td>
-                <td>
-                    <% if(data.getP_stock() > 0) { %>
-                    <span class="badge bg-success"><%= data.getP_stock() %>개</span>
-                    <% } else { %>
-                    <span class="badge bg-danger">품절</span>
-                    <% } %>
-                </td>
-                <td><%= data.getP_regdate() %></td>
-                <td>
-                        <span class="likes-badge">
-                            <i class="bi bi-heart-fill me-1"></i><%= data.getLikes() %>
-                        </span>
-                </td>
-            </tr>
-            <%
-                    }
-                }
-            %>
+            <c:choose>
+                <c:when test="${empty requestScope.productDatas}">
+                    <tr class="text-center">
+                        <td colspan="6" class="py-3 text-muted">
+                            <i class="bi bi-exclamation-circle me-2"></i>상품이 없습니다!
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="data" items="${requestScope.productDatas}">
+                        <tr class="text-center">
+                            <td>${data.p_num}</td>
+                            <td>
+                                <a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=${data.p_num}" class="product-link">
+                                        ${data.p_name}
+                                </a>
+                            </td>
+                            <td class="fw-bold">
+                                <fmt:formatNumber value="${data.p_price}" pattern="#,###" />원
+                            </td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${data.p_stock > 0}">
+                                        <span class="badge bg-success">${data.p_stock}개</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="badge bg-danger">품절</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>${data.p_regdate}</td>
+                            <td>
+                                <span class="likes-badge">
+                                    <i class="bi bi-heart-fill me-1"></i>${data.likes}
+                                </span>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
             </tbody>
         </table>
     </div>
@@ -239,4 +244,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

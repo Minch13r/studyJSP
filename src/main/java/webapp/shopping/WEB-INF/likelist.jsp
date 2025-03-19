@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8" import="webapp.shopping.model.dto.ProductDTO, java.util.ArrayList"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -92,89 +93,95 @@
 
 	<!-- 좋아요 목록 컨테이너 -->
 	<div class="wishlist-container">
-		<%
-			ArrayList<ProductDTO> likeList = (ArrayList<ProductDTO>)request.getAttribute("likeList");
-			if(likeList == null || likeList.isEmpty()) {
-		%>
-		<div class="wishlist-empty">
-			<i class="far fa-heart fa-3x mb-3"></i>
-			<p class="fs-5">아직 좋아하는 상품이 없습니다!</p>
-			<a href="controller.jsp?action=MAINPAGE" class="btn btn-primary mt-3">
-				<i class="fas fa-store me-2"></i>쇼핑하러 가기
-			</a>
-		</div>
-		<% } else { %>
-		<div class="table-responsive">
-			<table class="table table-hover align-middle wishlist-table">
-				<thead class="text-center">
-				<tr>
-					<th scope="col">상품번호</th>
-					<th scope="col">상품명</th>
-					<th scope="col">가격</th>
-					<th scope="col">설명</th>
-					<th scope="col">재고</th>
-					<th scope="col">등록날짜</th>
-					<th scope="col">관리</th>
-				</tr>
-				</thead>
-				<tbody>
-				<% for(ProductDTO data : likeList) { %>
-				<tr>
-					<td class="text-center"><%= data.getP_num() %></td>
-					<td>
-						<a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=<%= data.getP_num() %>" class="product-link">
-							<%= data.getP_name() %>
-						</a>
-					</td>
-					<td class="text-end price-value"><%= String.format("%,d", data.getP_price()) %> 원</td>
-					<td><small><%= data.getP_description() %></small></td>
-					<td class="text-center">
-						<% if (data.getP_stock() > 10) { %>
-						<span class="badge bg-success stock-badge"><%= data.getP_stock() %>개 남음</span>
-						<% } else if (data.getP_stock() > 0) { %>
-						<span class="badge bg-warning text-dark stock-badge">품절임박! <%= data.getP_stock() %>개</span>
-						<% } else { %>
-						<span class="badge bg-danger stock-badge">품절</span>
-						<% } %>
-					</td>
-					<td class="text-center date-value"><%= data.getP_regdate() %></td>
-					<td class="text-center">
-						<div class="btn-group">
-							<a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=<%= data.getP_num() %>" class="btn btn-sm btn-outline-primary">
-								<i class="fas fa-eye"></i>
-							</a>
-							<form action="controller.jsp" method="post" class="d-inline">
-								<input type="hidden" name="action" value="UNLIKEPRODUCT">
-								<input type="hidden" name="p_num" value="<%= data.getP_num() %>">
-								<button type="submit" class="btn btn-sm btn-outline-danger">
-									<i class="fas fa-heart-broken"></i>
-								</button>
-							</form>
-							<form action="controller.jsp" method="post" class="d-inline">
-								<input type="hidden" name="action" value="ADDCART">
-								<input type="hidden" name="p_num" value="<%= data.getP_num() %>">
-								<button type="submit" class="btn btn-sm btn-outline-success">
-									<i class="fas fa-cart-plus"></i>
-								</button>
-							</form>
-						</div>
-					</td>
-				</tr>
-				<% } %>
-				</tbody>
-			</table>
-		</div>
+		<c:choose>
+			<c:when test="${empty requestScope.likeList}">
+				<div class="wishlist-empty">
+					<i class="far fa-heart fa-3x mb-3"></i>
+					<p class="fs-5">아직 좋아하는 상품이 없습니다!</p>
+					<a href="controller.jsp?action=MAINPAGE" class="btn btn-primary mt-3">
+						<i class="fas fa-store me-2"></i>쇼핑하러 가기
+					</a>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div class="table-responsive">
+					<table class="table table-hover align-middle wishlist-table">
+						<thead class="text-center">
+						<tr>
+							<th scope="col">상품번호</th>
+							<th scope="col">상품명</th>
+							<th scope="col">가격</th>
+							<th scope="col">설명</th>
+							<th scope="col">재고</th>
+							<th scope="col">등록날짜</th>
+							<th scope="col">관리</th>
+						</tr>
+						</thead>
+						<tbody>
+						<c:forEach var="data" items="${requestScope.likeList}">
+							<tr>
+								<td class="text-center">${data.p_num}</td>
+								<td>
+									<a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=${data.p_num}" class="product-link">
+											${data.p_name}
+									</a>
+								</td>
+								<td class="text-end price-value">
+									<fmt:formatNumber value="${data.p_price}" pattern="#,###" /> 원
+								</td>
+								<td><small>${data.p_description}</small></td>
+								<td class="text-center">
+									<c:choose>
+										<c:when test="${data.p_stock > 10}">
+											<span class="badge bg-success stock-badge">${data.p_stock}개 남음</span>
+										</c:when>
+										<c:when test="${data.p_stock > 0}">
+											<span class="badge bg-warning text-dark stock-badge">품절임박! ${data.p_stock}개</span>
+										</c:when>
+										<c:otherwise>
+											<span class="badge bg-danger stock-badge">품절</span>
+										</c:otherwise>
+									</c:choose>
+								</td>
+								<td class="text-center date-value">${data.p_regdate}</td>
+								<td class="text-center">
+									<div class="btn-group">
+										<a href="controller.jsp?action=PRODUCTDETAILPAGE&p_num=${data.p_num}" class="btn btn-sm btn-outline-primary">
+											<i class="fas fa-eye"></i>
+										</a>
+										<form action="controller.jsp" method="post" class="d-inline">
+											<input type="hidden" name="action" value="UNLIKEPRODUCT">
+											<input type="hidden" name="p_num" value="${data.p_num}">
+											<button type="submit" class="btn btn-sm btn-outline-danger">
+												<i class="fas fa-heart-broken"></i>
+											</button>
+										</form>
+										<form action="controller.jsp" method="post" class="d-inline">
+											<input type="hidden" name="action" value="ADDCART">
+											<input type="hidden" name="p_num" value="${data.p_num}">
+											<button type="submit" class="btn btn-sm btn-outline-success">
+												<i class="fas fa-cart-plus"></i>
+											</button>
+										</form>
+									</div>
+								</td>
+							</tr>
+						</c:forEach>
+						</tbody>
+					</table>
+				</div>
 
-		<!-- 페이지 하단 버튼 -->
-		<div class="d-flex justify-content-between mt-4">
-			<a href="controller.jsp?action=MAINPAGE" class="btn btn-primary">
-				<i class="fas fa-arrow-left me-2"></i>메인으로 돌아가기
-			</a>
-			<a href="controller.jsp?action=CARTPAGE" class="btn btn-success">
-				<i class="fas fa-shopping-cart me-2"></i>장바구니 보기
-			</a>
-		</div>
-		<% } %>
+				<!-- 페이지 하단 버튼 -->
+				<div class="d-flex justify-content-between mt-4">
+					<a href="controller.jsp?action=MAINPAGE" class="btn btn-primary">
+						<i class="fas fa-arrow-left me-2"></i>메인으로 돌아가기
+					</a>
+					<a href="controller.jsp?action=CARTPAGE" class="btn btn-success">
+						<i class="fas fa-shopping-cart me-2"></i>장바구니 보기
+					</a>
+				</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>
 
